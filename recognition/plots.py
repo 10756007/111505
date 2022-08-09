@@ -93,6 +93,7 @@ class Annotator:
         # Add one xyxy box to image with label
         elapsed_time = 0
         nlabel = label.split()
+        global move, take
         if self.pil or not is_ascii(label):
             self.draw.rectangle(box, width=self.lw, outline=color)  # box
             if label:
@@ -124,9 +125,42 @@ class Annotator:
             if label[:3] in sushi:
                 elapsed_time = time.time() - sushi[label[:3]]
                 sushi_elapsed_time[label[:3]] = elapsed_time
-                print(round(elapsed_time, 2))
+                print(int(elapsed_time))
 
-            if nlabel[0] in hygiene:
+            if nlabel[1] == "salmon":
+                classes = "A"
+                expiration = 10
+            elif nlabel[1] == "shrimp":
+                classes = "B"
+                expiration = 15
+
+            if int(elapsed_time - expiration) >= 0:
+                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+
+            elif int(elapsed_time - expiration) >= -3:
+                cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 255, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+
+            elif nlabel[0] in hygiene:
 
                 cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
 
@@ -136,7 +170,7 @@ class Annotator:
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
                     cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
             elif result > 0:
@@ -152,7 +186,7 @@ class Annotator:
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
                     cv2.rectangle(self.im, p1, p2, (0, 255, 0), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
             elif result < 0:
@@ -163,8 +197,8 @@ class Annotator:
                     shrimp.remove(nlabel[0])
 
                 cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
-
-                hygiene.append(nlabel[0])
+                if nlabel[0] not in hygiene:
+                    hygiene.append(nlabel[0])
 
                 if label:
                     tf = max(self.lw - 1, 1)  # font thickness
@@ -172,25 +206,27 @@ class Annotator:
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
                     cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
             # print(salmon)
             # print(shrimp)
-            print("被碰觸過:" + str(hygiene))
+            print("離開軌道:" + str(hygiene))
             print("鮭魚:" + str(len(salmon)))
             print("鮮蝦:" + str(len(shrimp)))
-
             print(str(nlabel[1]))
 
-            db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
-            with db.cursor() as cursor:
-                sql = 'INSERT INTO Freshness(`ID`, `Name`, `Class`, `Expiration date`)VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE Name =%s ' % (str(nlabel[0]), repr((nlabel[1])), str(nlabel[2]), str(round(elapsed_time, 0)), (str(nlabel[0])))
-                cursor.execute(sql)
-                db.commit()
-            # data = cursor.fetchone()
-            # print(data)
-            db.close()
+
+            # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
+            # with db.cursor() as cursor:
+            #     # sql = 'INSERT INTO Freshness(`ID`, `Name`, `Class`, `Expiration date`)VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE Name =%s ' % (str(nlabel[0]), repr((nlabel[1])), str(nlabel[2]), str(round(elapsed_time, 0)), (str(nlabel[0])))
+            #     sql = 'replace INTO Freshness(`ID`, `Name`, `Class`, `Expiration date`)VALUES (%s, %s, %s, %s) ' \
+            #           % (str(nlabel[0]), repr((nlabel[1])), str(nlabel[2]), str(round(elapsed_time, 0)))
+            #     cursor.execute(sql)
+            #     db.commit()
+            # # data = cursor.fetchone()
+            # # print(data)
+            # db.close()
 
     def rectangle(self, xy, fill=None, outline=None, width=1):
         # Add rectangle to image (PIL-only)
