@@ -24,7 +24,6 @@ from utils.general import (LOGGER, Timeout, check_requirements, clip_coords, inc
 from utils.metrics import fitness
 
 sushi = {}
-sushi_elapsed_time = {}
 hygiene = []
 salmon = []
 shrimp = []
@@ -93,7 +92,6 @@ class Annotator:
         # Add one xyxy box to image with label
         elapsed_time = 0
         nlabel = label.split()
-        global move, take
         if self.pil or not is_ascii(label):
             self.draw.rectangle(box, width=self.lw, outline=color)  # box
             if label:
@@ -124,8 +122,7 @@ class Annotator:
 
             if label[:3] in sushi:
                 elapsed_time = time.time() - sushi[label[:3]]
-                sushi_elapsed_time[label[:3]] = elapsed_time
-                print(int(elapsed_time))
+                # print(int(elapsed_time))
 
             if nlabel[1] == "salmon":
                 classes = "A"
@@ -134,63 +131,8 @@ class Annotator:
                 classes = "B"
                 expiration = 15
 
-            if int(elapsed_time - expiration) >= 0:
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
-
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-
-            elif int(elapsed_time - expiration) >= -3:
-                cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
-
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 255, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-
-            elif nlabel[0] in hygiene:
-
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
-
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-            elif result > 0:
-
-                if nlabel[1] == 'salmon' and (nlabel[0] not in salmon):
-                    salmon.append(nlabel[0])
-                elif nlabel[1] == 'shrimp' and (nlabel[0] not in shrimp):
-                    shrimp.append(nlabel[0])
-
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 255, 0), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-            elif result < 0:
-
+            if result < 0:
+                freshness = 0
                 if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
                     salmon.remove(nlabel[0])
                 elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
@@ -209,12 +151,77 @@ class Annotator:
                     cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
+
+            elif nlabel[0] in hygiene:
+                freshness = 0
+                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+
+            elif int(elapsed_time - expiration) >= 0:
+                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                freshness = 1 # 過期
+
+                if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
+                    salmon.remove(nlabel[0])
+                elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
+                    shrimp.remove(nlabel[0])
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+
+            elif int(elapsed_time - expiration) >= -3:
+                cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                freshness = 0
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 255, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+
+            elif result > 0:
+                freshness = 0
+                if nlabel[1] == 'salmon' and (nlabel[0] not in salmon):
+                    salmon.append(nlabel[0])
+                elif nlabel[1] == 'shrimp' and (nlabel[0] not in shrimp):
+                    shrimp.append(nlabel[0])
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 255, 0), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+
+            salmon_put = 10 - len(salmon)
+            print("鮭魚:" + str(salmon_put))
             # print(salmon)
             # print(shrimp)
             print("離開軌道:" + str(hygiene))
-            print("鮭魚:" + str(len(salmon)))
-            print("鮮蝦:" + str(len(shrimp)))
-            print(str(nlabel[1]))
+            # print("鮭魚:" + str(len(salmon)))
+            # print("鮮蝦:" + str(len(shrimp)))
 
 
             # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
