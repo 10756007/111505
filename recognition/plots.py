@@ -27,6 +27,7 @@ sushi = {}
 hygiene = []
 salmon = []
 shrimp = []
+compare = []
 # Settings
 CONFIG_DIR = user_config_dir()  # Ultralytics settings dir
 RANK = int(os.getenv('RANK', -1))
@@ -105,6 +106,7 @@ class Annotator:
                 self.draw.text((box[0], box[1] - h if outside else box[1]), label, fill=txt_color, font=self.font)
         else:  # cv2
             p1, p2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
+
             cx = int(box[0] + (box[2] - box[0]) / 2)
             cy = int(box[1] + (box[3] - box[1]) / 2)
             center_coordinates = (int(cx), int(cy))
@@ -115,11 +117,27 @@ class Annotator:
 
             result = cv2.pointPolygonTest(np.array(area_1, np.int32), (int(cx), int(cy)), False)
 
+            if result > 0 and (label[:3] not in compare):
+                crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
+                img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+                blurred = cv2.GaussianBlur(img_gray, (11, 11), 0)
+                binary = cv2.Canny(blurred, 20, 120)
+                # ret, binary = cv2.threshold(img_gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                # maximum = 0
+                # for c in contours:
+                #     if len(c) > maximum:
+                #         con = c
+                black_image = np.zeros(img_gray.shape, np.uint8)
+                cv2.drawContours(black_image, contours, -1, (255, 255, 255), 3)
+                # cv2.drawContours(img_gray, contours, -1, (0, 0, 255), 3)
+
+                cv2.imshow("1", black_image)
+                # cv2.imshow("2", img_gray)
+
             if result > 0 and (label[:3] not in sushi):
                 sushi[label[:3]] = time.time()
-
             # print(sushi)
-
             if label[:3] in sushi:
                 elapsed_time = time.time() - sushi[label[:3]]
                 # print(int(elapsed_time))
@@ -188,6 +206,7 @@ class Annotator:
             elif int(elapsed_time - expiration) >= -3:
                 cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
                 freshness = 0
+
                 if label:
                     tf = max(self.lw - 1, 1)  # font thickness
                     w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
@@ -200,6 +219,7 @@ class Annotator:
 
             elif result > 0:
                 freshness = 0
+
                 if nlabel[1] == 'salmon' and (nlabel[0] not in salmon):
                     salmon.append(nlabel[0])
                 elif nlabel[1] == 'shrimp' and (nlabel[0] not in shrimp):
@@ -222,7 +242,6 @@ class Annotator:
             print("離開軌道:" + str(hygiene))
             # print("鮭魚:" + str(len(salmon)))
             # print("鮮蝦:" + str(len(shrimp)))
-
 
             # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
             # with db.cursor() as cursor:
