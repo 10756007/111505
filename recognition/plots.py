@@ -17,6 +17,7 @@ import seaborn as sn
 import torch
 import time
 import pymysql
+
 from PIL import Image, ImageDraw, ImageFont
 
 from utils.general import (LOGGER, Timeout, check_requirements, clip_coords, increment_path, is_ascii, is_chinese,
@@ -27,7 +28,7 @@ sushi = {}
 hygiene = []
 salmon = []
 shrimp = []
-compare = []
+compare = {}
 # Settings
 CONFIG_DIR = user_config_dir()  # Ultralytics settings dir
 RANK = int(os.getenv('RANK', -1))
@@ -116,24 +117,50 @@ class Annotator:
             area_1 = [(10, 200), (50, 200), (50, 60), (600, 60), (600, 400), (50, 400), (50, 300), (10, 300)]
 
             result = cv2.pointPolygonTest(np.array(area_1, np.int32), (int(cx), int(cy)), False)
-
-            if result > 0 and (label[:3] not in compare):
+            if label[:3] not in compare:
                 crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
                 img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
-                blurred = cv2.GaussianBlur(img_gray, (11, 11), 0)
-                binary = cv2.Canny(blurred, 20, 120)
-                # ret, binary = cv2.threshold(img_gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-                contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                # maximum = 0
-                # for c in contours:
-                #     if len(c) > maximum:
-                #         con = c
-                black_image = np.zeros(img_gray.shape, np.uint8)
-                cv2.drawContours(black_image, contours, -1, (255, 255, 255), 3)
-                # cv2.drawContours(img_gray, contours, -1, (0, 0, 255), 3)
+                blurred1 = cv2.GaussianBlur(img_gray, (11, 11), 0)
+                sift = cv2.SIFT_create()
+                keypoints_1, descriptors_1 = sift.detectAndCompute(blurred1, None)
 
-                cv2.imshow("1", black_image)
-                # cv2.imshow("2", img_gray)
+                compare[label[:3]] = descriptors_1
+
+            if compare:
+                crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
+                img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+                blurred2 = cv2.GaussianBlur(img_gray, (11, 11), 0)
+                keypoints_2, descriptors_2 = sift.detectAndCompute(blurred2, None)
+
+            bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck = True)
+            matches = bf.match(compare, descriptors_2)
+            matches = sorted(matches, key = lambda x:x.distance)
+            
+            # for i in range(0, 10):
+            #     print(matches[i].distance)
+
+            s_image = cv2.drawMatches(blurred1, keypoints_1, blurred2, keypoints_2, matches[:100], blurred2, flags = 2)
+            # s_image = cv2.drawKeypoints(blurred1, keypoits_1, img_gray)
+            cv2.imshow("1", s_image)
+
+
+            # if result > 0 and (label[:3] not in compare):
+                # crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
+                # img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+                # blurred = cv2.GaussianBlur(img_gray, (11, 11), 0)
+                # binary = cv2.Canny(blurred, 20, 120)
+                # # ret, binary = cv2.threshold(img_gray, 150, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+                # contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                # # maximum = 0
+                # # for c in contours:
+                # #     if len(c) > maximum:
+                # #         con = c
+                # black_image = np.zeros(img_gray.shape, np.uint8)
+                # cv2.drawContours(black_image, contours, -1, (255, 255, 255), 3)
+                # # cv2.drawContours(img_gray, contours, -1, (0, 0, 255), 3)
+                #
+                # cv2.imshow("1", black_image)
+                # # cv2.imshow("2", img_gray)
 
             if result > 0 and (label[:3] not in sushi):
                 sushi[label[:3]] = time.time()
@@ -166,7 +193,7 @@ class Annotator:
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
                     cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
 
@@ -180,7 +207,7 @@ class Annotator:
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
                     cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
 
@@ -199,7 +226,7 @@ class Annotator:
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
                     cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
 
@@ -213,7 +240,7 @@ class Annotator:
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
                     cv2.rectangle(self.im, p1, p2, (0, 255, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
 
@@ -231,7 +258,7 @@ class Annotator:
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
                     cv2.rectangle(self.im, p1, p2, (0, 255, 0), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(classes) + str(label) + str(round(elapsed_time, 0)),
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
 
