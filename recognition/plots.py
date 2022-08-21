@@ -117,33 +117,44 @@ class Annotator:
             area_1 = [(10, 200), (50, 200), (50, 60), (600, 60), (600, 400), (50, 400), (50, 300), (10, 300)]
 
             result = cv2.pointPolygonTest(np.array(area_1, np.int32), (int(cx), int(cy)), False)
-            if label[:3] not in compare:
-                crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
-                img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
-                blurred1 = cv2.GaussianBlur(img_gray, (11, 11), 0)
-                sift = cv2.SIFT_create()
-                keypoints_1, descriptors_1 = sift.detectAndCompute(blurred1, None)
 
+
+            crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
+            img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+            blurred1 = cv2.GaussianBlur(img_gray, (11, 11), 0)
+            sift = cv2.SIFT_create()
+            keypoints_1, descriptors_1 = sift.detectAndCompute(blurred1, None)
+            # print(descriptors_1)
+
+            if label[:3] not in compare:
                 compare[label[:3]] = descriptors_1
 
-            if compare:
-                crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
+                crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]),
+                           int(box[0]):int(box[0]) + int(box[2] - box[0])]
                 img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
                 blurred2 = cv2.GaussianBlur(img_gray, (11, 11), 0)
+                sift = cv2.SIFT_create()
                 keypoints_2, descriptors_2 = sift.detectAndCompute(blurred2, None)
 
-            bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck = True)
-            matches = bf.match(compare, descriptors_2)
-            matches = sorted(matches, key = lambda x:x.distance)
-            
-            # for i in range(0, 10):
-            #     print(matches[i].distance)
+            # print(compare)
+                print("--------------------")
 
-            s_image = cv2.drawMatches(blurred1, keypoints_1, blurred2, keypoints_2, matches[:100], blurred2, flags = 2)
-            # s_image = cv2.drawKeypoints(blurred1, keypoits_1, img_gray)
-            cv2.imshow("1", s_image)
-
-
+                for id, descriptors in compare.items():
+                    bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
+                    matches = bf.match(descriptors, descriptors_2)
+                    matches = sorted(matches, key=lambda x: x.distance)
+                    for i in range(0, len(matches)):
+                        sum = 0
+                        sum += matches[i].distance
+                    average = sum / len(matches)
+                    if average <= 1:
+                        print(average)
+                        label_list = list(label)
+                        label_list[:3] = id
+                        label = ''.join(label_list)
+                        print(label)
+                    s_image = cv2.drawMatches(blurred1, keypoints_1, blurred2, keypoints_2, matches[:100], blurred2, flags=2)
+                    cv2.imshow("1", s_image)
             # if result > 0 and (label[:3] not in compare):
                 # crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
                 # img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
