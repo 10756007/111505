@@ -138,13 +138,12 @@ class Annotator:
 
             # print(compare)
                 print("--------------------")
-
+                sum = 0
                 for id, descriptors in compare.items():
                     bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
                     matches = bf.match(descriptors, descriptors_2)
                     matches = sorted(matches, key=lambda x: x.distance)
                     for i in range(0, len(matches)):
-                        sum = 0
                         sum += matches[i].distance
                     average = sum / len(matches)
                     if average <= 1:
