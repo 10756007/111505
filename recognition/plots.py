@@ -25,15 +25,29 @@ from utils.general import (LOGGER, Timeout, check_requirements, clip_coords, inc
 from utils.metrics import fitness
 
 sushi = {}
+sushi_out = {}
 hygiene = []
+expired_already = []
+expired_soon = []
 salmon = []
 shrimp = []
 compare = {}
+average_list = []
+saved_descriptors = {}
 # Settings
 CONFIG_DIR = user_config_dir()  # Ultralytics settings dir
 RANK = int(os.getenv('RANK', -1))
 matplotlib.rc('font', **{'size': 11})
 matplotlib.use('Agg')  # for writing to files only
+
+db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
+with db.cursor() as cursor:
+    sql_1 = 'delete from Freshness '
+    cursor.execute(sql_1)
+    db.commit()
+# data = cursor.fetchone()
+# print(data)
+db.close()
 
 
 class Colors:
@@ -94,6 +108,7 @@ class Annotator:
         # Add one xyxy box to image with label
         elapsed_time = 0
         nlabel = label.split()
+
         if self.pil or not is_ascii(label):
             self.draw.rectangle(box, width=self.lw, outline=color)  # box
             if label:
@@ -118,42 +133,81 @@ class Annotator:
 
             result = cv2.pointPolygonTest(np.array(area_1, np.int32), (int(cx), int(cy)), False)
 
+            # crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]),
+            #            int(box[0]):int(box[0]) + int(box[2] - box[0])]
+            # img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+            # blurred1 = cv2.GaussianBlur(img_gray, (11, 11), 0)
+            # sift = cv2.SIFT_create()
+            #
+            # new_keypoints, new_descriptors = sift.detectAndCompute(blurred1, None)
+            # matched_id = -1
+            #
+            # if len(saved_descriptors) > 0:
+            #     distances = []
+            #     total_dist = 0
+            #     for sushi_id, descriptor in saved_descriptors.items():
+            #         bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
+            #         matches = bf.match(new_descriptors, descriptor)
+            #         matches = sorted(matches, key=lambda x: x.distance)
+            #
+            #         for i in range(0, len(matches)):
+            #             print("iiiiiii", i)
+            #             print("???????", matches[i].distance)
+            #             total_dist += matches[i].distance
+            #             print("aaaaaaa", total_dist)
+            #             avg_dist = total_dist / (i+1)
+            #             print("bbbbbbb", avg_dist)
+            #             distances.append((avg_dist, sushi_id))
+            #     min_avg_dist, sushi_id = min(distances)
+            #     print("最小:", min_avg_dist)
+            #     # if min_avg_dist <= 20:
+            #     #     matched_id = sushi_id
+            # if matched_id == -1:
+            #     print(label[:3], "is new detection")
+            #     saved_descriptors[label[:3]] = new_descriptors
+            # else:
+            #     print(label[:3], "matched to", matched_id)
 
-            crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
-            img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
-            blurred1 = cv2.GaussianBlur(img_gray, (11, 11), 0)
-            sift = cv2.SIFT_create()
-            keypoints_1, descriptors_1 = sift.detectAndCompute(blurred1, None)
-            # print(descriptors_1)
+            #--------------------------------------------------------------------
 
-            if label[:3] not in compare:
-                compare[label[:3]] = descriptors_1
+            # crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
+            # img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+            # blurred1 = cv2.GaussianBlur(img_gray, (11, 11), 0)
+            # sift = cv2.SIFT_create()
+            # keypoints_1, descriptors_1 = sift.detectAndCompute(blurred1, None)
+            # # print(descriptors_1)
+            #
+            # if label[:3] not in compare:
+            #     compare[label[:3]] = descriptors_1
+            #
+            #     crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]),
+            #                int(box[0]):int(box[0]) + int(box[2] - box[0])]
+            #     img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
+            #     blurred2 = cv2.GaussianBlur(img_gray, (11, 11), 0)
+            #     sift = cv2.SIFT_create()
+            #     keypoints_2, descriptors_2 = sift.detectAndCompute(blurred2, None)
+            #
+            #     print("--------------------")
+            #     sum = 0
+            #     for id, descriptors in compare.items():
+            #         bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
+            #         matches = bf.match(descriptors, descriptors_2)
+            #         matches = sorted(matches, key=lambda x: x.distance)
+            #         for i in range(0, len(matches)):
+            #             sum += matches[i].distance
+            #         average = sum / len(matches)
+            #         average_list.append(average)
+            #     min_average = min(average_list)
+            #     if min_average <= 1:
+            #         print(min_average)
+            #         label_list = list(label)
+            #         label_list[:3] = id
+            #         label = ''.join(label_list)
+            #         print(label)
+            #     s_image = cv2.drawMatches(blurred1, keypoints_1, blurred2, keypoints_2, matches[:100], blurred2, flags=2)
+            #     cv2.imshow("1", s_image)
 
-                crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]),
-                           int(box[0]):int(box[0]) + int(box[2] - box[0])]
-                img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
-                blurred2 = cv2.GaussianBlur(img_gray, (11, 11), 0)
-                sift = cv2.SIFT_create()
-                keypoints_2, descriptors_2 = sift.detectAndCompute(blurred2, None)
 
-            # print(compare)
-                print("--------------------")
-                sum = 0
-                for id, descriptors in compare.items():
-                    bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
-                    matches = bf.match(descriptors, descriptors_2)
-                    matches = sorted(matches, key=lambda x: x.distance)
-                    for i in range(0, len(matches)):
-                        sum += matches[i].distance
-                    average = sum / len(matches)
-                    if average <= 1:
-                        print(average)
-                        label_list = list(label)
-                        label_list[:3] = id
-                        label = ''.join(label_list)
-                        print(label)
-                    s_image = cv2.drawMatches(blurred1, keypoints_1, blurred2, keypoints_2, matches[:100], blurred2, flags=2)
-                    cv2.imshow("1", s_image)
             # if result > 0 and (label[:3] not in compare):
                 # crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
                 # img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
@@ -180,56 +234,63 @@ class Annotator:
                 # print(int(elapsed_time))
 
             if nlabel[1] == "salmon":
-                classes = "A"
-                expiration = 10
+                classes = "'A'"
+                price = 40
+                ch_name = "'鮭魚壽司'"
+                expiration_time = 10
             elif nlabel[1] == "shrimp":
-                classes = "B"
-                expiration = 15
+                classes = "'B'"
+                price = 30
+                ch_name = "'鮮蝦壽司'"
+                expiration_time = 15
 
-            if result < 0:
-                freshness = 0
-                if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
-                    salmon.remove(nlabel[0])
-                elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
-                    shrimp.remove(nlabel[0])
-
+            if result > 0 and nlabel[0] in hygiene:
+                if nlabel[0] in hygiene and nlabel[0] in expired_already:
+                    expired = "'過期'"
+                    moves = "'被觸碰過'"
+                elif nlabel[0] in hygiene and nlabel[0] in expired_soon:
+                    expired = "'快過期'"
+                    moves = "'被觸碰過'"
+                elif nlabel[0] in hygiene:
+                    expired = "'正常'"
+                    moves = "'被觸碰過'"
                 cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+
+            elif result < 0:
+
                 if nlabel[0] not in hygiene:
                     hygiene.append(nlabel[0])
 
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-
-            elif nlabel[0] in hygiene:
-                freshness = 0
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
-
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-
-            elif int(elapsed_time - expiration) >= 0:
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
-                freshness = 1 # 過期
+                if nlabel[0] in expired_already:
+                    expired = "'過期'"
+                    moves = "'正常'"
+                elif nlabel[0] in expired_soon:
+                    expired = "'快過期'"
+                    moves = "'正常'"
+                else:
+                    expired = "'正常'"
+                    moves = "'正常'"
 
                 if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
                     salmon.remove(nlabel[0])
                 elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
                     shrimp.remove(nlabel[0])
 
+                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                # if nlabel[0] not in hygiene:
+                #     hygiene.append(nlabel[0])
+
                 if label:
                     tf = max(self.lw - 1, 1)  # font thickness
                     w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
@@ -240,9 +301,73 @@ class Annotator:
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
 
-            elif int(elapsed_time - expiration) >= -3:
+            elif nlabel[0] in hygiene and nlabel[0] in expired_already:
+
+                expired = "'過期'"
+                moves = "'被觸碰過'"
+
+                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+            elif nlabel[0] in hygiene:
+
+                expired = "'正常'"
+                moves = "'被觸碰過'"
+
+                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+            # elif nlabel[0] in expired_already:
+            elif int(elapsed_time - expiration_time) >= 0:
+
+                expired = "'過期'"
+                moves = "'正常'"
+
+                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
+                    salmon.remove(nlabel[0])
+                elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
+                    shrimp.remove(nlabel[0])
+
+                if nlabel[0] not in expired_already:
+                    expired_already.append(nlabel[0])
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+            # elif nlabel[0] in expired_soon:
+            elif int(elapsed_time - expiration_time) >= -3:
+
+                expired = "'快過期'"
+                moves = "'正常'"
+
                 cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
-                freshness = 0
+
+                if nlabel[0] not in expired_soon:
+                    expired_soon.append(nlabel[0])
 
                 if label:
                     tf = max(self.lw - 1, 1)  # font thickness
@@ -255,7 +380,9 @@ class Annotator:
                                 thickness=tf, lineType=cv2.LINE_AA)
 
             elif result > 0:
-                freshness = 0
+
+                moves = "'正常'"
+                expired = "'正常'"
 
                 if nlabel[1] == 'salmon' and (nlabel[0] not in salmon):
                     salmon.append(nlabel[0])
@@ -272,24 +399,22 @@ class Annotator:
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
 
-            salmon_put = 10 - len(salmon)
-            print("鮭魚:" + str(salmon_put))
-            # print(salmon)
-            # print(shrimp)
+            salmon_put = 5 - len(salmon)
+            print("鮭魚應補:" + str(salmon_put) +"個")
             print("離開軌道:" + str(hygiene))
-            # print("鮭魚:" + str(len(salmon)))
-            # print("鮮蝦:" + str(len(shrimp)))
+            print(str(label), expired, moves)
 
-            # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
-            # with db.cursor() as cursor:
-            #     # sql = 'INSERT INTO Freshness(`ID`, `Name`, `Class`, `Expiration date`)VALUES (%s, %s, %s, %s) ON DUPLICATE KEY UPDATE Name =%s ' % (str(nlabel[0]), repr((nlabel[1])), str(nlabel[2]), str(round(elapsed_time, 0)), (str(nlabel[0])))
-            #     sql = 'replace INTO Freshness(`ID`, `Name`, `Class`, `Expiration date`)VALUES (%s, %s, %s, %s) ' \
-            #           % (str(nlabel[0]), repr((nlabel[1])), str(nlabel[2]), str(round(elapsed_time, 0)))
-            #     cursor.execute(sql)
-            #     db.commit()
-            # # data = cursor.fetchone()
-            # # print(data)
-            # db.close()
+            db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
+            with db.cursor() as cursor:
+                sql = 'replace into Freshness(`ID` , `Class`, `Expiration date`, `Move`, `Expired` )VALUES (%s, %s, %s, %s, %s) ' \
+                      % (str(nlabel[0]), classes, str(round(elapsed_time, 0)), moves, expired)
+                # sql = 'replace INTO Freshness(`ID`, `Name`, `Class`, `Expiration date`, `Move`, `Amount`, `Price`, `Chinese_Name`, `Expired` )VALUES (%s, %s, %s, %s, %s, %d, %s, %s, %s) ' \
+                #       % (str(nlabel[0]), repr((nlabel[1])), classes, str(round(elapsed_time, 0)), moves, 0, price, ch_name, expired)
+                cursor.execute(sql)
+                db.commit()
+            # data = cursor.fetchone()
+            # print(data)
+            db.close()
 
     def rectangle(self, xy, fill=None, outline=None, width=1):
         # Add rectangle to image (PIL-only)
