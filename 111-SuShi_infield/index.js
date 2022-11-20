@@ -15,7 +15,7 @@ var con = mysql.createConnection({
   host: '140.131.114.242',
   user: '111505',
   password: '@Imd505111',
-  database: '111-Sushi',
+  database: '111-SuShi',
   prot: 3306
 });
 
@@ -25,13 +25,13 @@ var con = mysql.createConnection({
 // });
 
 
-// con.connect(function(err) {
-//   if (err) throw err;
-//   con.query("SELECT * FROM Product", function (err, result) {
-//     if (err) throw err;
-//     console.log(result);
-//   });
-// });
+con.connect(function(err) {
+  if (err) throw err;
+  con.query("SELECT * FROM Product", function (err, result) {
+    if (err) throw err;
+    console.log(result);
+  });
+});
 
 app.get('/', function (req, res) {
   res.render('index',{

@@ -5,7 +5,8 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, 
       initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <title>專題內場畫面</title>
+      <title>111505-SuShi_infield</title>
+      <body style="background-color:#a1343c;"></body>
     </head>
 
     <style>
@@ -13,7 +14,7 @@
       background-color: rgb(255, 255, 255);
       background-size: 300px;
       font-family: "Roboto",sans-serif;
-      background-image: url("logo.jpg");
+      background-image: url("sushi.gif");
       background-repeat: no-repeat;
       background-position: right top;
     }
@@ -23,6 +24,7 @@
     height: auto;
     border: 3px solid black;
     display: flex;
+    font-weight:bold;
     }
 
     td {
@@ -40,7 +42,8 @@
       line-height: 2;
       letter-spacing: 3px;
       font-family: DFKai-sb;
-      color: red;
+      color: rgb(255, 255, 255);
+      font-weight:bold;
     }
 
     #sample {
@@ -52,7 +55,7 @@
     <body>
         <div id="container">
             <div id="item1">
-              <iframe width="1200" height="740" src="https://www.youtube.com/embed/_TvoMxTZAjc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <!-- <iframe width="1200" height="740" src="https://www.youtube.com/embed/_TvoMxTZAjc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
             </div>
             <div id="item2">
             <br>
@@ -61,100 +64,100 @@
                 <tr>            
                   <% if (amount1 < 10) {%>
                     <td class = lineHeightmin width = "50%""><%=name1%></td> 
-                    <td class = lineHeightmin width = "25%""><%=amount1%></td>
+                    <td class = lineHeightmin width = "25%""><%=20-amount1%></td>
                   <% }else { %>
-                    <td class = lineHeight width = "50%""><%=name1%></td> 
-                    <td  class = lineHeight width = "25%""><%=amount1%></td>
+                    <td class = lineHeight width = "50%"><%=name1%></td> 
+                    <td  class = lineHeight width = "25%"><%=20-amount1%></td>
                   <% } %>
                 </tr>
-
+                
                 <tr>
                   <% if (amount2 < 10) {%>
                     <td class = lineHeightmin><%=name2%></td>
-                    <td class = lineHeightmin><%=amount2%></td>
+                    <td class = lineHeightmin><%=20-amount2%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name2%></td>
-                  <td class = lineHeight><%=amount2%></td>
+                  <td class = lineHeight><%=20-amount2%></td>
                   <% } %>
                 </tr>
 
                 <tr>
                   <% if (amount3 < 10) {%>
                     <td class = lineHeightmin><%=name3%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount3%></td>
+                    <td class = lineHeightmin width = "25%""><%=20-amount3%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name3%></td>
-                    <td  class = lineHeight width = "25%""><%=amount3%></td>
+                    <td  class = lineHeight width = "25%""><%=20-amount3%></td>
                   <% } %>
                 </tr>
 
                 <tr>
                   <% if (amount4 < 10) {%>
                     <td class = lineHeightmin><%=name4%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount4%></td>
+                    <td class = lineHeightmin width = "25%""><%=20-amount4%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name4%></td>
-                    <td  class = lineHeight width = "25%""><%=amount4%></td>
+                    <td  class = lineHeight width = "25%""><%=20-amount4%></td>
                   <% } %>
                 </tr>
 
                 <tr>                  
                   <% if (amount5 < 10) {%>
                     <td class = lineHeightmin><%=name5%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount5%></td>
+                    <td class = lineHeightmin width = "25%""><%=20-amount5%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name5%></td>
-                    <td  class = lineHeight width = "25%""><%=amount5%></td>
+                    <td  class = lineHeight width = "25%""><%=20-amount5%></td>
                   <% } %>
                 </tr>
 
                 <tr>                  
                   <% if (amount6 < 10) {%>
                     <td class = lineHeightmin><%=name6%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount6%></td>
+                    <td class = lineHeightmin width = "25%""><%=20-amount6%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name6%></td>
-                    <td  class = lineHeight width = "25%""><%=amount6%></td>
+                    <td  class = lineHeight width = "25%""><%=20-amount6%></td>
                   <% } %>
                 </tr>
 
                 <tr>                  
                   <% if (amount7 < 10) {%>
                     <td class = lineHeightmin><%=name7%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount7%></td>
+                    <td class = lineHeightmin width = "25%""><%=20-amount7%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name7%></td>
-                    <td  class = lineHeight width = "25%""><%=amount7%></td>
+                    <td  class = lineHeight width = "25%""><%=20-amount7%></td>
                   <% } %>
                 </tr>
 
                 <tr>                  
                   <% if (amount8 < 10) {%>
                     <td class = lineHeightmin><%=name8%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount8%></td>
+                    <td class = lineHeightmin width = "25%""><%=20-amount8%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name8%></td>
-                    <td  class = lineHeight width = "25%""><%=amount8%></td>
+                    <td  class = lineHeight width = "25%""><%=20-amount8%></td>
                   <% } %>
                 </tr>
 
                 <tr>                  
                   <% if (amount9 < 10) {%>
                     <td class = lineHeightmin><%=name9%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount9%></td>
+                    <td class = lineHeightmin width = "25%""><%=10-amount9%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name9%></td>
-                    <td  class = lineHeight width = "25%""><%=amount9%></td>
+                    <td  class = lineHeight width = "25%""><%=10-amount9%></td>
                   <% } %>
                 </tr>
 
                 <tr>                  
                   <% if (amount10 < 10) {%>
                     <td class = lineHeightmin><%=name10%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount10%></td>
+                    <td class = lineHeightmin width = "25%""><%=10-amount10%></td>
                   <% }else { %>
                     <td class = lineHeight><%=name10%></td>
-                    <td  class = lineHeight width = "25%""><%=amount10%></td>
+                    <td  class = lineHeight width = "25%""><%=10-amount10%></td>
                   <% } %>
                 </tr>
               </table>
