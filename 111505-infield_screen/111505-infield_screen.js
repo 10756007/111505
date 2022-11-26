@@ -53,5 +53,5 @@ app.get('/', function (req, res) {
 });
 
 app.listen(3000, function() {
-  console.log('連接成功');
+  console.log('程式啟動');
 });
