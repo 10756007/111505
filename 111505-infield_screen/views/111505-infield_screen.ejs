@@ -54,10 +54,7 @@
       letter-spacing: 3px;
       font-family: DFKai-sb;
       color: rgb(255, 255, 255);
-
     }
-
-
 
     
     </style>
@@ -69,100 +66,13 @@
             <div id="item2" class="item2">
             <br>
               <table id="sample" class="sample">
-                <tr>            
-                  <% if (amount1 < 10) {%>
-                    <td class = lineHeightmin width = "50%"><%=name1%></td> 
-                    <td class = lineHeightmin width = "25%"><%=amount1%></td>
-                  <% }else { %>
-                    <td class = lineHeight width = "50%"><%=name1%></td> 
-                    <td  class = lineHeight width = "25%"><%=amount1%></td>
-                  <% } %>
-
-                </tr>
-                <tr>
-                  <% if (amount2 < 10) {%>
-                    <td class = lineHeightmin><%=name2%></td>
-                    <td class = lineHeightmin><%=amount2%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name2%></td>
-                  <td class = lineHeight><%=amount2%></td>
-                  <% } %>
-                </tr>
-                <tr>
-                  <% if (amount3 < 10) {%>
-                    <td class = lineHeightmin><%=name3%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount3%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name3%></td>
-                    <td  class = lineHeight width = "25%""><%=amount3%></td>
-                  <% } %>
-                </tr>
-                <tr>
-                  <% if (amount4 < 10) {%>
-                    <td class = lineHeightmin><%=name4%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount4%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name4%></td>
-                    <td  class = lineHeight width = "25%""><%=amount4%></td>
-                  <% } %>
-                </tr>
-                <tr>                  
-                  <% if (amount5 < 10) {%>
-                    <td class = lineHeightmin><%=name5%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount5%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name5%></td>
-                    <td  class = lineHeight width = "25%""><%=amount5%></td>
-                  <% } %>
-                </tr>
-                <tr>                  
-                  <% if (amount6 < 10) {%>
-                    <td class = lineHeightmin><%=name6%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount6%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name6%></td>
-                    <td  class = lineHeight width = "25%""><%=amount6%></td>
-                  <% } %>
-                </tr>
-                <tr>                  
-                  <% if (amount7 < 10) {%>
-                    <td class = lineHeightmin><%=name7%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount7%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name7%></td>
-                    <td  class = lineHeight width = "25%""><%=amount7%></td>
-                  <% } %>
-                </tr>
-
-                <tr>                  
-                  <% if (amount8 < 10) {%>
-                    <td class = lineHeightmin><%=name8%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount8%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name8%></td>
-                    <td  class = lineHeight width = "25%""><%=amount8%></td>
-                  <% } %>
-                </tr>
-
-                <tr>                  
-                  <% if (amount9 < 10) {%>
-                    <td class = lineHeightmin><%=name9%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount9%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name9%></td>
-                    <td  class = lineHeight width = "25%""><%=amount9%></td>
-                  <% } %>
-                </tr>
-
-                <tr>                  
-                  <% if (amount10 < 10) {%>
-                    <td class = lineHeightmin><%=name10%></td>
-                    <td class = lineHeightmin width = "25%""><%=amount10%></td>
-                  <% }else { %>
-                    <td class = lineHeight><%=name10%></td>
-                    <td  class = lineHeight width = "25%""><%=amount10%></td>
-                  <% } %>
-                </tr>
+                <% for(var i=0 ; i<data.length ; i++){ %>
+                  <tr>
+                    <td  class = lineHeight width = "25%"><%= data[i].Chinese_Name%></td>
+                    <td  class = lineHeight width = "25%"><%= data[i].quantity%></td>
+                  </tr>
+                <% } %>
+              
               </table>
             </div>
           </div>
