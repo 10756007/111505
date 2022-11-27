@@ -11,7 +11,7 @@
     <style>
       /* 整體美化和排版 */
     body{
-      height: 730px;
+      height: 700px;
       background-color: grey;
       background-size: 300px;
       font-family: "Roboto",sans-serif;
@@ -38,7 +38,7 @@
     display: flex;
     }
 
-    td {
+    tr {
     padding: 5px;
     font-size: 30px;
         }
@@ -68,8 +68,13 @@
               <table id="sample" class="sample">
                 <% for(var i=0 ; i<data.length ; i++){ %>
                   <tr>
-                    <td  class = lineHeight width = "25%"><%= data[i].Chinese_Name%></td>
-                    <td  class = lineHeight width = "25%"><%= data[i].quantity%></td>
+                    <% if(data[i].quantity > 10) { %>
+                      <td  class = lineHeight width = "50%"><%= data[i].Chinese_Name%></td>
+                      <td  class = lineHeight width = "25%"><%= data[i].quantity%></td>
+                    <%}else{ %>
+                      <td  class = lineHeightmin width = "50%"><%= data[i].Chinese_Name%></td>
+                      <td  class = lineHeightmin width = "25%"><%= data[i].quantity%></td>
+                    <% } %>
                   </tr>
                 <% } %>
               
