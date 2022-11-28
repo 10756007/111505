@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link rel="stylesheet" href="/public/style/style.css">
+      <!-- type="text/css" -->
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, 
+      initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <title>111505-infield_screen</title>
+    </head>
+    <style>
+    /* table, th ,td{
+    border:1px solid black;
+    } */
+
+    body{
+      height: 640px;
+      background-color: grey;
+      background-size: 300px;
+      font-family: "Roboto",sans-serif;
+      background-image: url("logo.PNG");
+      background-repeat: no-repeat;
+      background-position: right top;
+      font-weight:bold;
+      display: grid;
+      /* border: solid; */
+      overflow-x: hidden;
+      display:flex;
+    }
+
+    table{
+      border-collapse: collapse;
+      width: 50%;
+      font-family: DFKai-sb;
+      font-size: 30px;
+      position: absolute;
+      left: 250px;
+    }
+
+    /* th{
+      background-color: aqua;
+    } */
+
+    td{
+      height: 20px;
+      text-align: center;
+    }
+    
+    th ,td{
+      border-bottom:1px solid black;
+    }
+
+    img{
+      width: 300px;
+      height: 250px;
+      margin-top: 50px;
+      /* border: 5px solid black;
+      border-radius: 50%; */
+    }
+
+
+    </style>
+<!-- 
+    <style>
+      /* 整體美化和排版 */
+    body{
+      height: 640px;
+      background-color: grey;
+      background-size: 300px;
+      font-family: "Roboto",sans-serif;
+      background-image: url("sushi.gif");
+      background-repeat: no-repeat;
+      background-position: right top;
+      font-weight:bold;
+      display: grid;
+      border: solid;
+      overflow-x: hidden;
+    }
+
+    /* 部分排版 */
+    .item2 {
+      display: grid;
+      grid-template-columns: 75px 1fr ;
+    }
+    .sample {
+      display: grid;
+      grid-template-columns: 350px 350px 350px 350px;
+    }
+    #container{
+    width: auto;
+    height: auto;
+    display: flex;
+    }
+
+    tr {
+    padding: 5px;
+    font-size: 30px;
+    }
+
+    .lineHeight{
+      line-height: 2;
+      letter-spacing: 3px;
+      font-family: DFKai-sb;
+    }
+
+    .lineHeightmin{
+      line-height: 2;
+      letter-spacing: 3px;
+      font-family: DFKai-sb;
+      color: rgb(255, 255, 255);
+    }
+    
+    </style> -->
+
+    <body>      
+          <img src="sushi.gif">
+              <table>
+                <tr>
+                  <th class = lineHeight>壽司名稱</th>
+                  <th class = lindeHeight>需補數量</th>
+                </tr>
+                <% for(var i=0 ; i<data.length ; i++){ %>
+                  <tr>
+                    <% if(data[i].quantity > 10) { %>
+                      <td  class = lineHeight width = "50%"><%= data[i].Chinese_Name%></td>
+                      <td  class = lineHeight width = "40%"><%= data[i].quantity%></td>
+                    <%}else{ %>
+                      <td  class = lineHeightmin width = "50%"><%= data[i].Chinese_Name%></td>
+                      <td  class = lineHeightmin width = "40%"><%= data[i].quantity%></td>
+                    <% } %>
+                  </tr>
+                <% } %>
+              
+              </table>
+            </div>
+          </div>
+    </body>
+</html>
