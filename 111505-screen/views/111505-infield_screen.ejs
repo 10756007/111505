@@ -1,138 +1,127 @@
 <!DOCTYPE html>
 <html>
     <head>
-      <link rel="stylesheet" href="/public/style/style.css">
+      <!-- <link rel="stylesheet" href=""> -->
       <!-- type="text/css" -->
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, 
       initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <title>111505-infield_screen</title>
+      <title>畫面</title>
     </head>
+
     <style>
-    /* table, th ,td{
-    border:1px solid black;
-    } */
 
-    body{
-      height: 640px;
-      background-color: grey;
-      background-size: 300px;
-      font-family: "Roboto",sans-serif;
-      background-image: url("logo.PNG");
-      background-repeat: no-repeat;
-      background-position: right top;
-      font-weight:bold;
-      display: grid;
-      /* border: solid; */
-      overflow-x: hidden;
-      display:flex;
-    }
+      body{
+        background: gray;
+      }
 
-    table{
-      border-collapse: collapse;
-      width: 50%;
-      font-family: DFKai-sb;
-      font-size: 30px;
-      position: absolute;
-      left: 250px;
-    }
+      table{
+        position: absolute;
+        border-collapse: collapse;
+        position: absolute;
+        top: 10%;
+        left: 30%;
+        right: 30%;
+      }
 
-    /* th{
-      background-color: aqua;
-    } */
+      table, th, td{
+        border: 5px solid black;
+      }
 
-    td{
-      height: 20px;
-      text-align: center;
-    }
-    
-    th ,td{
-      border-bottom:1px solid black;
-    }
+      tr, th, td{
+        width: 400px;
+        font-weight:bold;
+        font-family: DFKai-sb;
+      }
 
-    img{
-      width: 300px;
-      height: 250px;
-      margin-top: 50px;
-      /* border: 5px solid black;
-      border-radius: 50%; */
-    }
+      th{
+        font-size: 60px;
+        background: rgb(2, 85, 2);
+      }
+      
+      td{
+        text-align: center;
+        font-size: 40px;
+      }
 
+      #img1{
+        width: 15%;
+      }
+
+      #img2{
+        position: absolute;
+        width: 15%;
+        top: 0%;
+        right: 0%;
+      }
+
+      #img3{
+        position: absolute;
+        width: 15%;
+        bottom: 0%;
+        left: 0%;
+      }
+
+      #img4{
+        position: absolute;
+        width: 15%;
+        bottom: 0%;
+        right: 0%;
+
+        animation-name: gogogo;
+        animation-duration: 1s;
+      }
+
+      @keyframes gogogo{
+        0%{right: 0%; bottom: 0%;}
+        50%{right: 10%;bottom: 0%;}
+        100%{right: 20%;bottom: 0%;}
+      }
+
+      @media only screen and (max-width:1300px){
+        table, th, td{
+        border: 5px solid rgb(134, 6, 6);
+      }
+      }
+
+      @media only screen and (max-width:1200px){
+        table{
+        position: absolute;
+        border-collapse: collapse;
+        position: absolute;
+        top: 10%;
+        left: 30%;
+        right: 30%;
+        }
+      }
 
     </style>
-<!-- 
-    <style>
-      /* 整體美化和排版 */
-    body{
-      height: 640px;
-      background-color: grey;
-      background-size: 300px;
-      font-family: "Roboto",sans-serif;
-      background-image: url("sushi.gif");
-      background-repeat: no-repeat;
-      background-position: right top;
-      font-weight:bold;
-      display: grid;
-      border: solid;
-      overflow-x: hidden;
-    }
 
-    /* 部分排版 */
-    .item2 {
-      display: grid;
-      grid-template-columns: 75px 1fr ;
-    }
-    .sample {
-      display: grid;
-      grid-template-columns: 350px 350px 350px 350px;
-    }
-    #container{
-    width: auto;
-    height: auto;
-    display: flex;
-    }
+    <body>
+      
+      <img id="img1" src="logo.PNG">
+      <img id="img2" src="logo.PNG">
+      <img id="img3" src="logo.PNG">
+      <img id="img4" src="logo.PNG">
+      
+      <table>
+        <tr>
+          <th class = lineHeight>壽司名稱</th>
+          <th class = lindeHeight>需補數量</th>
+        </tr>
 
-    tr {
-    padding: 5px;
-    font-size: 30px;
-    }
+        <% for(var i=0 ; i<data.length ; i++){ %>
+          <tr>
+            <% if(data[i].Ave > 10) { %>
+              <td  class = lineHeight><%= data[i].Chinese_Name%></td>
+              <td  class = lineHeight><%= data[i].Ave%></td>
+            <%}else{ %>
+              <td  class = lineHeightmin><%= data[i].Chinese_Name%></td>
+              <td  class = lineHeightmin><%= data[i].Ave%></td>
+            <% } %>
+          </tr>
+            <% } %>
 
-    .lineHeight{
-      line-height: 2;
-      letter-spacing: 3px;
-      font-family: DFKai-sb;
-    }
-
-    .lineHeightmin{
-      line-height: 2;
-      letter-spacing: 3px;
-      font-family: DFKai-sb;
-      color: rgb(255, 255, 255);
-    }
-    
-    </style> -->
-
-    <body>      
-          <img src="sushi.gif">
-              <table>
-                <tr>
-                  <th class = lineHeight>壽司名稱</th>
-                  <th class = lindeHeight>需補數量</th>
-                </tr>
-                <% for(var i=0 ; i<data.length ; i++){ %>
-                  <tr>
-                    <% if(data[i].quantity > 10) { %>
-                      <td  class = lineHeight width = "50%"><%= data[i].Chinese_Name%></td>
-                      <td  class = lineHeight width = "40%"><%= data[i].quantity%></td>
-                    <%}else{ %>
-                      <td  class = lineHeightmin width = "50%"><%= data[i].Chinese_Name%></td>
-                      <td  class = lineHeightmin width = "40%"><%= data[i].quantity%></td>
-                    <% } %>
-                  </tr>
-                <% } %>
-              
-              </table>
-            </div>
-          </div>
+      </table>
     </body>
 </html>

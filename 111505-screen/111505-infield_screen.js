@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var path = require('path');
+var prot = 8787
 
 app.use(express.static('public/img'));
 app.use(express.static('files'));
@@ -21,8 +22,23 @@ var db_option =
   };
 
 app.get('/', function (req, res) {
+  res.render('111505-home'
+  );
+  })
+
+app.get('/forget', function(req,res){
+  res.render('111505-forget_password'
+  );
+  })
+
+app.get('/register', function (req, res) {
+  res.render('111505-register'
+  );
+  })
+
+app.get('/screen', function (req, res) {
   var connection = mysql.createConnection(db_option);
-  var query = 'SELECT * FROM Amount order by quantity desc';
+  var query = 'SELECT * FROM Amount';
   connection.query(query, function(err, rows, fields){
     if(err) throw err;
     var data = rows;
@@ -30,6 +46,6 @@ app.get('/', function (req, res) {
   });
   })
 
-app.listen(3000, function() {
+app.listen(8787, function() {
   console.log('程式啟動');
 });
