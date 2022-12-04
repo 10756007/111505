@@ -36,6 +36,16 @@ app.get('/forget', function(req,res){
   );
   })
 
+app.get('/forget2', function(req,res){
+  res.render('111505-forget_password2',
+  );
+  })
+
+app.get('/forget3', function(req,res){
+  res.render('111505-forget_password3',
+  );
+  })
+
 app.get('/register', function (req, res) {
   // var password=document.getElementById("pw")
   // var uppercase=document.getElementById("uppercase")
