@@ -24,32 +24,10 @@
       }
 
       img{
-        width: 20%;
+        width: 30%;
         position: absolute;
-        right: 40%;
+        right: 35%;
         top: 0;
-      }
-
-      a{
-        color: blue;
-        font-family: DFKai-sb;
-      }
-
-      a:hover{
-          color: red;
-        }
-
-      #a1{
-        position: absolute;
-        bottom: 5%;
-        right: 38%;
-        padding-top: 10px;
-      }
-      
-      #a2{
-        position: absolute;
-        bottom: 0;
-        right: 40%;
       }
 
       button{
@@ -71,9 +49,10 @@
       }
 
       form > h1{
+        color: rgb(255, 255, 255);
         font-size: 60px;
         text-shadow: 0 0 3px brown, 0 0 10px lightcoral;
-        color: rgb(255, 255, 255);
+        margin-top: 10%;
       }
 
       form > h3{
@@ -82,9 +61,7 @@
       }
 
       form > label{
-        color: white;
         font-size: 30px;
-        text-shadow: 0 0 0.5px brown, 0 0 8px rgb(225, 1, 1);
       }
 
       .input1{
@@ -123,32 +100,6 @@
         box-shadow: 3px 3px 9px lightcoral;
       }
 
-      #login2{
-        padding: 10px 25px;
-        color: rgb(255, 255, 255);
-        background: transparent;
-        border: 1px solid red;
-        border-radius: 30px;
-        font-size: 30px;
-        border-radius: 30px;
-        transition: 0.5s ease-in;
-        position: fixed;
-        right: 20%;
-        margin-top: 5%;
-        outline: none;
-        cursor: pointer;
-        text-align: right;
-        text-shadow: 0 0 3px rgb(127, 3, 3), 0 0 5px rgb(219, 5, 5);
-        font-family: DFKai-sb;
-      }
-
-      #login2:hover{
-        background-color: lightcoral;
-        border: 1px solid rgb(0, 63, 103);
-        transition: 1.5s;
-        box-shadow: 3px 3px 9px lightcoral;
-      }
-
       @media only screen and (max-width:870px){
         form{
         border: 5px solid rgb(134, 6, 6);
@@ -162,23 +113,9 @@
       <div class="container">
         <form>
           <img src="logo.png">
-          <h1>建立帳號</h1>
+          <h1>成功建立!</h1>
           <h3>登入</h3>
-          <br>
-          <label>信箱:</label>
-          <input class="input1" id="username" name="username" type="text" placeholder="請輸入電子信箱" required>
-          <br>
-          <label>帳號:</label>
-          <input class="input1" id="username" name="username" type="text" placeholder="請輸入帳號" required>
-          <br>
-          <label>密碼:</label>
-          <input class="input1" id="pw" name="pw" type="password" placeholder = "請輸入密碼" required>     
-          <br>
-          <label>密碼:</label>
-          <input class="input1" id="pw" name="pw" type="password" placeholder = "再次輸入密碼" required> 
-          <br>
-          <button id = "login1" type="button" onclick=location.href="http://localhost:8787/login">返回</button>
-          <button id = "login2" type="button" onclick=location.href="http://localhost:8787/register2">確認</button>         
+          <button id = "login1" type="button" onclick=location.href="http://localhost:8787/login">返回登入畫面</button>
         </form>
       </div>
       

@@ -63,6 +63,11 @@ app.get('/register', function (req, res) {
   );
   })
 
+  app.get('/register2', function (req, res) {
+    res.render('111505-register2',
+    );
+    })
+
   app.get('/choose', function(req,res){
     res.render('111505-choose',
     );
