@@ -4,6 +4,7 @@ var path = require('path');
 var prot = 8787
 
 app.use(express.static('public/img'));
+app.use(express.static('public/Css'));
 app.use(express.static('files'));
 app.use(express.static(path.join(__dirname,'public')));
 
@@ -23,6 +24,11 @@ var db_option =
 
 app.get('/', function (req, res) {
   res.render('111505-home'
+  );
+  })
+
+app.get('/login', function (req, res) {
+  res.render('111505-login'
   );
   })
 

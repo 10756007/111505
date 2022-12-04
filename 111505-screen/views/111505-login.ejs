@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, 
+      initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <title>登入</title>
+    </head>
+    <style>
+
+      *{
+        margin: 0;
+        padding: 0;
+      }
+
+      a{
+        color: blue;
+      }
+
+      a:hover{
+          color: red;
+        }
+
+      #a1{
+        position: absolute;
+        right: 10%;
+      }
+      
+      #a2{
+        position: absolute;
+        bottom: 0;
+        right: 40%;
+      }
+
+      form{
+        position: absolute;
+        padding: 90px 60px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        border: 5px solid black;
+        border-radius: 20px;
+        background-color: azure;
+      }
+
+      form > h1, h3{
+        text-align: center;
+      }
+
+      form > h1{
+        font-size: 60px;
+        text-shadow: 0 0 3px brown, 0 0 10px lightcoral;
+      }
+
+      form > h3{
+        font-size: 40px;
+        text-shadow: 0 0 3px brown, 0 0 10px lightcoral;
+      }
+
+      form > span{
+        font-size: 40px;
+      }
+
+      .input1{
+        width: 200px;
+        height: 30px;
+        font-size: 25px;
+      }
+
+      #login1{
+        width: 100px;
+        height: 50px;
+        border: none;
+        color: lightskyblue;
+        background-color: rgb(191, 0, 0);
+        font-size: 30px;
+        border-radius: 10px;
+        transition: 0.5s ease-in;
+        position: fixed;
+        right: 30%;
+        left: 40%;
+      }
+
+      #login1:hover{
+        box-shadow: inset 100px 0px 100px 0px rgb(5, 5, 199);
+        color: rgb(191, 0, 0);
+        cursor: pointer;
+      }
+
+    </style>
+
+    <body>  
+      <form>
+        <h1>享狩獅系統</h1>
+        <h3>登入</h3>
+        <span>帳號: </span><input class="input1" type="text" placeholder = "請輸入帳號">
+        <br>
+        <span>密碼: </span><input class="input1" type="password" placeholder = "請輸入密碼">
+        <br>        
+        <a id="a1" href="http://localhost:8787/forget">竟然忘記密碼?</a>
+        <br>
+        <br>
+        <button id = "login1" type="button" onclick=location.href="http://localhost:8787/screen">登入</button>
+        <br>
+        <a id="a2" href="http://localhost:8787/register">還沒註冊嗎?</a>
+      </form>
+    </body>
+</html>

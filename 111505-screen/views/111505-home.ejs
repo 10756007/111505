@@ -1,57 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, 
-      initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-      <title>享狩獅</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>享狩獅</title>
     </head>
+
     <style>
-      
-      a:hover{
-        color: red;
-      }
 
-      form > span{
-        font-size: 40px;
-      }
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
 
-      .input1{
-        width: 200px;
-        height: 40px;
-        font-size: 25px;
-      }
+        body{
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            /* background-image: url(sushi.jpg); */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
 
-      #login1{
-        width: 100px;
-        height: 50px;
-        border: none;
-        color: aqua;
-        background-color: rebeccapurple;
-        font-size: 30px;
-        border-radius: 10px;
-        transition: 0.5s ease-in;
-      }
+        .logo{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: absolute;
+            bottom: 0;
+        }
 
-      #login1:hover{
-        box-shadow: inset 100px 0px 100px 0px yellowgreen;
-        color: blue;
-        cursor: pointer;
-      }
+        div > img{
+            width: 50px;
+            animation: logo 7s linear infinite;
+        }
+
+        @keyframes logo{
+            0%{
+                transform: translateY(-900px);
+                opacity: 0;
+            }
+            10%{
+                opacity: 0.6;
+            }
+            50%{
+                opacity: 0.8;
+            }
+            75%{
+                opacity: 1;
+            }
+
+            90%{
+                opacity: 0.5;
+            }
+
+            100%{
+                transform: translateY(0px);
+                opacity: 0;
+            }
+        }
+
+        div > img:nth-child(1){
+            animation-delay: 2s;
+        }
+        
+        div > img:nth-child(2){
+            animation-delay: 0s;
+        }
+
+        div > img:nth-child(3){
+            animation-delay: 1.2s;
+        }
+
+        div > img:nth-child(4){
+            animation-delay: 2.3s;
+        }
+
+        div > img:nth-child(5){
+            animation-delay: 1.5s;
+        }
+
+        div > img:nth-child(6){
+            animation-delay: 0.8s;
+        }
+
+        div > img:nth-child(7){
+            animation-delay: 2.2s;
+        }
+
+        div > img:nth-child(8){
+            animation-delay: 1.3s;
+        }
+
+        .theme{
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translate(-50%,-50%);
+        }
+
+        div > h3{
+            font-size: 40px;
+            color: rgb(255, 255, 255);
+            text-shadow: 0 0 3px brown, 0 0 10px lightcoral;
+        }
+
+        div > h1{
+            font-size: 100px;
+            color: rgb(255, 255, 255);
+            text-shadow: 0 0 3px brown, 0 0 20px lightcoral;
+        }
+
+        .button1{
+            font-size: 30px;
+            color: rgb(255, 255, 255);
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid red;
+            border-radius: 30px;
+            outline: none;
+            cursor: pointer;
+            text-align: right;
+            border-style: none double;
+            text-shadow: 0 0 3px rgb(127, 3, 3), 0 0 5px rgb(219, 5, 5);
+        }
+
+        .button1:hover{
+            background-color: lightblue;
+            border: 1px solid rgb(0, 63, 103);
+            border-style: none double;
+            transition: 1.5s;
+        }
 
     </style>
 
-    <body>  
-      <form>
-        <h1>享狩獅系統</h1>
-        <span>帳號:</span><input class="input1" type="text" placeholder = "請輸入帳號">
-        <br>
-        <span>密碼:</span><input class="input1" type="password" placeholder = "請輸入密碼">
-        <button id = "login1">登入</button>
-        <br>
-        <a href="http://localhost:8787/forget">竟然忘記密碼?</a>
-        <br>
-        <a href="http://localhost:8787/register">想要註冊嗎</a>
-      </form>
+    <body>
+        
+        <div class="theme">
+            <h3>歡迎來到</h3>
+            <h1>享狩獅</h1>
+            <button class="button1" type="button" onclick=location.href="http://localhost:8787/login" >進入享狩獅</button>
+        </div>
+
+        <div class="logo">
+            <img src="logo.png">
+            <img src="logo.png">
+            <img src="logo.png">
+            <img src="logo.png">
+            <img src="logo.png">
+            <img src="logo.png">
+            <img src="logo.png">
+            <img src="logo.png">
+        </div>
+
     </body>
 </html>
