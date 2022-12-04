@@ -1,12 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>註冊</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, 
+      initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <title>註冊</title>
     </head>
-    <body>
-        
+    <style>
+
+      *{
+        margin: 0;
+        padding: 0;
+      }
+
+      body{
+        background-color: rgb(134, 24, 24);
+      }
+
+      img{
+        width: 20%;
+        position: absolute;
+        right: 40%;
+        top: 0;
+      }
+
+      form{
+        position: absolute;
+        padding: 90px 60px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        border: 1px solid rgb(0, 0, 0);
+        border-radius: 20px;
+        background-color: azure;
+      }
+
+      form > h1{
+        text-align: center;
+        font-size: 60px;
+        text-shadow: 0 0 3px brown, 0 0 10px lightcoral;
+      }
+
+      form > span{
+        font-size: 30px;
+      }
+
+      .input1{
+        width: 200px;
+        height: 30px;
+        font-size: 25px;
+      }
+
+      #login1{
+        width: 100px;
+        height: 50px;
+        border: none;
+        color: lightskyblue;
+        background-color: rgb(191, 0, 0);
+        font-size: 30px;
+        border-radius: 10px;
+        transition: 0.5s ease-in;
+        position: fixed;
+        bottom: 2.5%;
+        right: 40.5%;
+      }
+
+      #login1:hover{
+        box-shadow: inset 100px 0px 100px 0px rgb(5, 5, 199);
+        color: rgb(191, 0, 0);
+        cursor: pointer;
+      }
+
+      @media only screen and (max-width:870px){
+        form{
+        border: 5px solid rgb(134, 6, 6);
+        }
+      }
+
+    </style>
+
+    <body>  
+      <form>
+        <img src="logo.png">
+        <h1>建立享狩獅帳號</h1>
+        <br>
+        <br>
+        <span>帳號  : </span><input class="input1" type="text" placeholder = "請輸入帳號">
+        <br>
+        <br>
+        <span>密碼  : </span><input class="input1" type="password" placeholder = "請輸入密碼">
+        <br>
+        <br>
+        <span>密碼  : </span><input class="input1" type="password" placeholder = "請再輸入一次密碼">
+        <br>
+        <br>
+        <button id = "login1" type="button" onclick=location.href="http://localhost:8787/screen">建立</button>
+
+      </form>
     </body>
-    </html>
+</html>

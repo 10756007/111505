@@ -13,6 +13,17 @@
         padding: 0;
       }
 
+      body{
+        background-color: rgb(134, 24, 24);
+      }
+
+      img{
+        width: 20%;
+        position: absolute;
+        right: 40%;
+        top: 0;
+      }
+
       a{
         color: blue;
       }
@@ -23,7 +34,8 @@
 
       #a1{
         position: absolute;
-        right: 10%;
+        bottom: 5%;
+        right: 38%;
       }
       
       #a2{
@@ -38,7 +50,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
-        border: 5px solid black;
+        border: 1px solid rgb(0, 0, 0);
         border-radius: 20px;
         background-color: azure;
       }
@@ -58,7 +70,7 @@
       }
 
       form > span{
-        font-size: 40px;
+        font-size: 30px;
       }
 
       .input1{
@@ -77,8 +89,7 @@
         border-radius: 10px;
         transition: 0.5s ease-in;
         position: fixed;
-        right: 30%;
-        left: 40%;
+        right: 38%;
       }
 
       #login1:hover{
@@ -87,15 +98,24 @@
         cursor: pointer;
       }
 
+      @media only screen and (max-width:870px){
+        form{
+        border: 5px solid rgb(134, 6, 6);
+        }
+      }
+
     </style>
 
     <body>  
       <form>
+        <img src="logo.png">
         <h1>享狩獅系統</h1>
         <h3>登入</h3>
-        <span>帳號: </span><input class="input1" type="text" placeholder = "請輸入帳號">
         <br>
-        <span>密碼: </span><input class="input1" type="password" placeholder = "請輸入密碼">
+        <span>帳號  : </span><input class="input1" type="text" placeholder = "請輸入帳號">
+        <br>
+        <span>密碼  : </span><input class="input1" type="password" placeholder = "請輸入密碼">
+        <input type="checkbox">記住密碼
         <br>        
         <a id="a1" href="http://localhost:8787/forget">竟然忘記密碼?</a>
         <br>
