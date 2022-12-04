@@ -4,7 +4,6 @@ var path = require('path');
 var prot = 8787
 
 app.use(express.static('public/img'));
-app.use(express.static('public/Css'));
 app.use(express.static('files'));
 app.use(express.static(path.join(__dirname,'public')));
 
@@ -33,14 +32,31 @@ app.get('/login', function (req, res) {
   })
 
 app.get('/forget', function(req,res){
-  res.render('111505-forget_password'
+  res.render('111505-forget_password',
   );
   })
 
 app.get('/register', function (req, res) {
-  res.render('111505-register'
+  // var password=document.getElementById("pw")
+  // var uppercase=document.getElementById("uppercase")
+  // var number=document.getElementById("number")
+  // var length=document.getElementById("length")
+
+  // password.onfocus=function(){
+  //   document.getElementById("rule").style.display="block";
+  // }
+  
+  // password.onblur=function(){
+  //     document.getElementById("rule").style.display="none";
+  // }
+  res.render('111505-register',
   );
   })
+
+  app.get('/choose', function(req,res){
+    res.render('111505-choose',
+    );
+    })
 
 app.get('/screen', function (req, res) {
   var connection = mysql.createConnection(db_option);

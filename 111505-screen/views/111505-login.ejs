@@ -69,7 +69,7 @@
         text-shadow: 0 0 3px brown, 0 0 10px lightcoral;
       }
 
-      form > span{
+      form > label{
         font-size: 30px;
       }
 
@@ -106,23 +106,29 @@
 
     </style>
 
-    <body>  
-      <form>
-        <img src="logo.png">
-        <h1>享狩獅系統</h1>
-        <h3>登入</h3>
-        <br>
-        <span>帳號  : </span><input class="input1" type="text" placeholder = "請輸入帳號">
-        <br>
-        <span>密碼  : </span><input class="input1" type="password" placeholder = "請輸入密碼">
-        <input type="checkbox">記住密碼
-        <br>        
-        <a id="a1" href="http://localhost:8787/forget">竟然忘記密碼?</a>
-        <br>
-        <br>
-        <button id = "login1" type="button" onclick=location.href="http://localhost:8787/screen">登入</button>
-        <br>
-        <a id="a2" href="http://localhost:8787/register">還沒註冊嗎?</a>
-      </form>
+    <body>
+      
+      <div class="container">
+        <form>
+          <img src="logo.png">
+          <h1>享狩獅系統</h1>
+          <h3>登入</h3>
+          <br>
+          <label>帳號:</label>
+          <input class="input1" id="username" name="username" type="text" placeholder="請輸入帳號" required>
+          <br>
+          <label>密碼:</label>
+          <input class="input1" id="pw" name="pw" type="password" placeholder = "請輸入密碼" required>
+          <input type="checkbox">記住密碼
+          <br>        
+          <a id="a1" href="http://localhost:8787/forget">竟然忘記密碼?</a>
+          <br>
+          <br>
+          <button id = "login1" type="button" onclick=location.href="http://localhost:8787/choose">登入</button>
+          <br>
+          <a id="a2" href="http://localhost:8787/register">還沒註冊嗎?</a>
+        </form>
+      </div>
+      
     </body>
 </html>

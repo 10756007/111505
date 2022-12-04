@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>首頁</title>
+    </head>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            background-color: gray;
+        }
+
+        div{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            margin-top: 15%;
+        }
+
+        #button1{
+        width: 300px;
+        height: 200px;
+        border: none;
+        color: lightskyblue;
+        background-color: rgb(191, 0, 0);
+        font-size: 30px;
+        border-radius: 20px;
+        transition: 1s ease-in;
+        text-shadow: 0 0 3px rgb(44, 221, 0), 0 0 20px rgb(255, 255, 255);
+        }
+
+        #button1:hover{
+        /* box-shadow: 5px 5px 3px black, inset 300px 0px 30px 0px rgb(5, 5, 199);
+        color: rgb(191, 0, 0);
+        cursor: pointer; */
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+        background-color:rgb(14, 92, 0);
+        background-image: url(logo.png);
+        background-size: 50%;
+        background-repeat: no-repeat;
+        background-position: center;
+        padding-top: 50%;
+        box-shadow: 5px 5px 3px black;
+        text-shadow: 0 0 3px brown, 0 0 20px lightcoral;
+        }
+
+        #button2{
+        width: 300px;
+        height: 200px;
+        border: none;
+        color: lightskyblue;
+        background-color: rgb(191, 0, 0);
+        font-size: 30px;
+        border-radius: 20px;
+        transition: 1s ease-in;
+        text-shadow: 0 0 3px rgb(44, 221, 0), 0 0 20px rgb(255, 255, 255);
+        }
+
+        #button2:hover{
+        color: rgb(0, 0, 0);
+        cursor: pointer;
+        background-color:rgb(14, 92, 0);
+        background-image: url(logo.png);
+        background-size: 50%;
+        background-repeat: no-repeat;
+        background-position: center;
+        padding-top: 50%;
+        box-shadow: -5px 5px 3px black;
+        text-shadow: 0 0 3px brown, 0 0 20px lightcoral;
+        animation: logo 2s;
+        }
+
+        @keyframes logo{
+            0%{
+                background-position: right top;
+            }
+            100%{
+                background-position: center
+            }
+        }
+
+    </style>
+
+    <body>
+        <div>
+            <form>
+                <button id = "button1" type="button" onclick=location.href="">外場畫面</button>
+            </form>
+
+            <form>
+                <button id = "button2" type="button" onclick=location.href="http://localhost:8787/screen">內場畫面</button>
+            </form>
+
+        </div>
+    </body>
+    </html>

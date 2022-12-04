@@ -5,97 +5,129 @@
       <meta name="viewport" content="width=device-width, 
       initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
       <title>註冊</title>
+      <link rel="stylesheet" href="/public/Css/home.css">
     </head>
     <style>
 
-      *{
-        margin: 0;
-        padding: 0;
-      }
-
-      body{
-        background-color: rgb(134, 24, 24);
-      }
-
-      img{
-        width: 20%;
-        position: absolute;
-        right: 40%;
-        top: 0;
-      }
-
-      form{
-        position: absolute;
-        padding: 90px 60px;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        border: 1px solid rgb(0, 0, 0);
-        border-radius: 20px;
-        background-color: azure;
-      }
-
-      form > h1{
-        text-align: center;
-        font-size: 60px;
-        text-shadow: 0 0 3px brown, 0 0 10px lightcoral;
-      }
-
-      form > span{
-        font-size: 30px;
-      }
-
-      .input1{
-        width: 200px;
-        height: 30px;
-        font-size: 25px;
-      }
-
-      #login1{
-        width: 100px;
-        height: 50px;
-        border: none;
-        color: lightskyblue;
-        background-color: rgb(191, 0, 0);
-        font-size: 30px;
-        border-radius: 10px;
-        transition: 0.5s ease-in;
-        position: fixed;
-        bottom: 2.5%;
-        right: 40.5%;
-      }
-
-      #login1:hover{
-        box-shadow: inset 100px 0px 100px 0px rgb(5, 5, 199);
-        color: rgb(191, 0, 0);
-        cursor: pointer;
-      }
-
-      @media only screen and (max-width:870px){
-        form{
-        border: 5px solid rgb(134, 6, 6);
+        body{
+            background-color: brown;
         }
-      }
 
+        img{
+        width: 15%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        }
+
+        .container{
+            margin: 50px;
+            width: 50%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: aqua;
+            border: 1px solid black;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        h1{
+        font-size: 50px;
+            text-align: center;
+            margin-top: 0%;
+            margin-bottom: 5px;
+        }
+
+        h3{
+            font-size: 50px;
+            text-align: center;
+            margin-top: 0%;
+            margin-bottom: 5px;
+        }
+
+        input{
+            width: 100%;
+            padding: 10px;
+            border: 1px solid black;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            box-sizing: border-box;
+        }
+
+        #login1{
+            width: 100px;
+            height: 50px;
+            border: none;
+            color: lightskyblue;
+            background-color: rgb(191, 0, 0);
+            font-size: 30px;
+            border-radius: 10px;
+            transition: 0.5s ease-in;
+            margin-top: 20px;
+        }
+
+        #login1:hover{
+            box-shadow: inset 100px 0px 100px 0px rgb(5, 5, 199);
+            color: rgb(191, 0, 0);
+            cursor: pointer;
+        }
+
+        #rule{
+            width: 50%;
+            display: none;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: aqua;
+            padding: 20px;
+            font-size: 20px;
+            border: 1px solid black;
+            border-radius: 20px;
+        }
+            
+        .invalid{
+            color: red;
+        }
+
+        .valid{
+            color: lightgreen;
+        }
+        .invalid:before{
+            position: relative;
+            left: -5px;
+            content: "\0021";
+        }
+
+        .valid:before{
+            position: relative;
+            left: -5px;
+            content: "\2713";
+        }
     </style>
 
-    <body>  
-      <form>
-        <img src="logo.png">
-        <h1>建立享狩獅帳號</h1>
-        <br>
-        <br>
-        <span>帳號  : </span><input class="input1" type="text" placeholder = "請輸入帳號">
-        <br>
-        <br>
-        <span>密碼  : </span><input class="input1" type="password" placeholder = "請輸入密碼">
-        <br>
-        <br>
-        <span>密碼  : </span><input class="input1" type="password" placeholder = "請再輸入一次密碼">
-        <br>
-        <br>
-        <button id = "login1" type="button" onclick=location.href="http://localhost:8787/screen">建立</button>
+    <body>
+        <div class="container">
+            <form>
+                <img src="logo.png">
+                <h1>建立享狩獅帳號</h1>
+                <label>帳號:</label>
+                <input class="input1" id="username" name="username" type="text" placeholder = "請輸入帳號" required>
+                <label>密碼:</label>
+                <input class="input1" id="pw" name="pw" type="password" placeholder = "請輸入密碼" required>
+                <label>確認密碼:</label>
+                <input class="input1" type="password" placeholder = "請再輸入一次密碼">
+                <button id = "login1" type="button" onclick=location.href="http://localhost:8787/choose">建立</button>
+            </form>
+        </div>
+      
+        <div id="rule">
+            <h3>密碼規則</h3>
+            <p id="uppercase" class="invalid">至少一個大寫字母</p>
+            <p id="number" class="invalid">至少一個數字</p>
+            <p id="length" class="invalid">至少5個英文or數字</p>
+        </div>
 
-      </form>
+        <script src="./111505-infield_screen.js"></script>
+
     </body>
 </html>
