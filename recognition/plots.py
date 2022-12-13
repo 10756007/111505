@@ -24,31 +24,40 @@ from utils.general import (LOGGER, Timeout, check_requirements, clip_coords, inc
                            try_except, user_config_dir, xywh2xyxy, xyxy2xywh)
 from utils.metrics import fitness
 
+# compare = {}
+# saved_descriptors = {}
+# average_list = []
+
 sushi = {}
 sushi_out = {}
 hygiene = []
-expired_already = []
-expired_soon = []
-salmon = []
-shrimp = []
-compare = {}
-average_list = []
-saved_descriptors = {}
+hygiene_1 = []
+
+salmon = [] # 鮭魚
+shrimp = [] # 鮮蝦
+capelin = [] # 蝦味魚卵
+fried = []  # 稻荷
+tuna = []  # 鮪魚
+tilapia = []  # 蒲燒鯛魚
+tamagoyaki = [] # 玉子燒
+arctic = [] # 北寄貝
+crab = [] # 蟹肉棒
+octopus = [] # 章魚
+
 # Settings
 CONFIG_DIR = user_config_dir()  # Ultralytics settings dir
 RANK = int(os.getenv('RANK', -1))
 matplotlib.rc('font', **{'size': 11})
 matplotlib.use('Agg')  # for writing to files only
 
-db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
-with db.cursor() as cursor:
-    sql_1 = 'delete from Freshness '
-    cursor.execute(sql_1)
-    db.commit()
+# db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
+# with db.cursor() as cursor:
+#     sql_1 = 'delete from Freshness '
+#     cursor.execute(sql_1)
+#     db.commit()
 # data = cursor.fetchone()
 # print(data)
-db.close()
-
+# db.close()
 
 class Colors:
     # Ultralytics color palette https://ultralytics.com/
@@ -106,6 +115,7 @@ class Annotator:
 
     def box_label(self, box, label='', color=(128, 128, 128), txt_color=(255, 255, 255)):
         # Add one xyxy box to image with label
+
         elapsed_time = 0
         nlabel = label.split()
 
@@ -122,15 +132,12 @@ class Annotator:
                 self.draw.text((box[0], box[1] - h if outside else box[1]), label, fill=txt_color, font=self.font)
         else:  # cv2
             p1, p2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
-
             cx = int(box[0] + (box[2] - box[0]) / 2)
             cy = int(box[1] + (box[3] - box[1]) / 2)
             center_coordinates = (int(cx), int(cy))
             cv2.rectangle(self.im, p1, p2, (0, 255, 0), thickness=self.lw, lineType=cv2.LINE_AA)
             cv2.circle(self.im, center_coordinates, radius=1, color=color, thickness=3)
-
-            area_1 = [(10, 200), (50, 200), (50, 60), (600, 60), (600, 400), (50, 400), (50, 300), (10, 300)]
-
+            area_1 = [(4, 100), (636, 100), (636, 290), (4, 290)]
             result = cv2.pointPolygonTest(np.array(area_1, np.int32), (int(cx), int(cy)), False)
 
             # crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]),
@@ -207,7 +214,6 @@ class Annotator:
             #     s_image = cv2.drawMatches(blurred1, keypoints_1, blurred2, keypoints_2, matches[:100], blurred2, flags=2)
             #     cv2.imshow("1", s_image)
 
-
             # if result > 0 and (label[:3] not in compare):
                 # crop_img = self.im[int(box[1]):int(box[1]) + int(box[3] - box[1]), int(box[0]):int(box[0]) + int(box[2] - box[0])]
                 # img_gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
@@ -228,193 +234,329 @@ class Annotator:
 
             if result > 0 and (label[:3] not in sushi):
                 sushi[label[:3]] = time.time()
-            # print(sushi)
+
             if label[:3] in sushi:
                 elapsed_time = time.time() - sushi[label[:3]]
-                # print(int(elapsed_time))
 
-            if nlabel[1] == "salmon":
+            if nlabel[1] == "salmon": #鮭魚
                 classes = "'A'"
-                price = 40
-                ch_name = "'鮭魚壽司'"
                 expiration_time = 10
-            elif nlabel[1] == "shrimp":
+                sushi_quantity = len(salmon)
+            elif nlabel[1] == "shrimp": #鮮蝦
                 classes = "'B'"
-                price = 30
-                ch_name = "'鮮蝦壽司'"
-                expiration_time = 15
+                expiration_time = 10
+                sushi_quantity = len(shrimp)
+            elif nlabel[1] == "capelin": #capelin roe蝦味魚卵
+                classes = "'C'"
+                expiration_time = 10
+                sushi_quantity = len(capelin)
+            elif nlabel[1] == "fried": #fried tofu poouch稻荷
+                classes = "'D'"
+                expiration_time = 10
+                sushi_quantity = len(fried)
+            elif nlabel[1] == "tuna": #鮪魚
+                classes = "'E'"
+                expiration_time = 10
+                sushi_quantity = len(tuna)
+            elif nlabel[1] == "tilapia": #蒲燒鯛魚
+                classes = "'F'"
+                expiration_time = 10
+                sushi_quantity = len(tilapia)
+            elif nlabel[1] == "tamagoyaki": #玉子燒
+                classes = "'G'"
+                expiration_time = 10
+                sushi_quantity = len(tamagoyaki)
+            elif nlabel[1] == "arctic": #arctic surf clam北寄貝
+                classes = "'H'"
+                expiration_time = 10
+                sushi_quantity = len(arctic)
+            elif nlabel[1] == "crab": #crab meat蟹風味棒
+                classes = "'I'"
+                expiration_time = 10
+                sushi_quantity = len(crab)
+            elif nlabel[1] == "octopus": #章魚
+                classes = "'J'"
+                expiration_time = 10
+                sushi_quantity = len(octopus)
 
-            if result > 0 and nlabel[0] in hygiene:
-                if nlabel[0] in hygiene and nlabel[0] in expired_already:
+            if result >= 0 and nlabel[0] in hygiene:
+                hygiene_1.append(nlabel[0])
+                if int(elapsed_time - expiration_time) >= 0:
                     expired = "'過期'"
                     moves = "'被觸碰過'"
-                elif nlabel[0] in hygiene and nlabel[0] in expired_soon:
+                elif int(elapsed_time - expiration_time) >= -5:
                     expired = "'快過期'"
                     moves = "'被觸碰過'"
-                elif nlabel[0] in hygiene:
+                else:
                     expired = "'正常'"
                     moves = "'被觸碰過'"
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                cv2.rectangle(self.im, p1, p2, (255, 203, 64), thickness=self.lw, lineType=cv2.LINE_AA)
 
                 if label:
                     tf = max(self.lw - 1, 1)  # font thickness
                     w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
                     outside = p1[1] - h - 3 >= 0  # label fits outside box
                     p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                    cv2.rectangle(self.im, p1, p2, (255, 203, 64), -1, cv2.LINE_AA)  # filled
+                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                thickness=tf, lineType=cv2.LINE_AA)
+
+            elif result < 0 and nlabel[0] in hygiene and nlabel[0] in hygiene_1:
+                if int(elapsed_time - expiration_time) >= 0:
+                    expired = "'過期'"
+                    moves = "'被觸碰過'"
+                elif int(elapsed_time - expiration_time) >= -5:
+                    expired = "'快過期'"
+                    moves = "'被觸碰過'"
+                else:
+                    expired = "'正常'"
+                    moves = "'被觸碰過'"
+
+                cv2.rectangle(self.im, p1, p2, (255, 203, 64), thickness=self.lw, lineType=cv2.LINE_AA)
+
+                if label:
+                    tf = max(self.lw - 1, 1)  # font thickness
+                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                    outside = p1[1] - h - 3 >= 0  # label fits outside box
+                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                    cv2.rectangle(self.im, p1, p2, (255, 203, 64), -1, cv2.LINE_AA)  # filled
                     cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
                                 (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                 thickness=tf, lineType=cv2.LINE_AA)
 
             elif result < 0:
-
                 if nlabel[0] not in hygiene:
                     hygiene.append(nlabel[0])
 
-                if nlabel[0] in expired_already:
+                if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
+                    salmon.remove(nlabel[0])
+                elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
+                    shrimp.remove(nlabel[0])
+                elif nlabel[1] == 'capelin' and (nlabel[0] in capelin):
+                    capelin.remove(nlabel[0])
+                elif nlabel[1] == 'fried' and (nlabel[0] in fried):
+                    fried.remove(nlabel[0])
+                elif nlabel[1] == 'tuna' and (nlabel[0] in tuna):
+                    tuna.remove(nlabel[0])
+                elif nlabel[1] == 'tilapia' and (nlabel[0] in tilapia):
+                    tilapia.remove(nlabel[0])
+                elif nlabel[1] == 'tamagoyaki' and (nlabel[0] in tamagoyaki):
+                    tamagoyaki.remove(nlabel[0])
+                elif nlabel[1] == 'arctic' and (nlabel[0] in arctic):
+                    arctic.remove(nlabel[0])
+                elif nlabel[1] == 'crab' and (nlabel[0] in crab):
+                    crab.remove(nlabel[0])
+                elif nlabel[1] == 'octopus' and (nlabel[0] in octopus):
+                    octopus.remove(nlabel[0])
+
+                db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                                     db='111-SuShi')
+                with db.cursor() as cursor:
+                    sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
+                          % (classes, str(sushi_quantity))
+                    cursor.execute(sql)
+                    db.commit()
+                db.close()
+
+                if int(elapsed_time - expiration_time) >= 0:
                     expired = "'過期'"
                     moves = "'正常'"
-                elif nlabel[0] in expired_soon:
+
+                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                                         db='111-SuShi')
+                    with db.cursor() as cursor:
+                        sql = 'delete from Freshness where ID = %s '
+                        id_tuple = (nlabel[0])
+                        cursor.execute(sql, id_tuple)
+                        db.commit()
+                    db.close()
+
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                    if label:
+                        tf = max(self.lw - 1, 1)  # font thickness
+                        w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                        outside = p1[1] - h - 3 >= 0  # label fits outside box
+                        p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                        cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                        cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                    (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                    thickness=tf, lineType=cv2.LINE_AA)
+
+                elif int(elapsed_time - expiration_time) >= -5:
                     expired = "'快過期'"
                     moves = "'正常'"
+                    cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                    if label:
+                        tf = max(self.lw - 1, 1)  # font thickness
+                        w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                        outside = p1[1] - h - 3 >= 0  # label fits outside box
+                        p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                        cv2.rectangle(self.im, p1, p2, (0, 255, 255), -1, cv2.LINE_AA)  # filled
+                        cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                    (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                    thickness=tf, lineType=cv2.LINE_AA)
+
                 else:
                     expired = "'正常'"
                     moves = "'正常'"
+                    cv2.rectangle(self.im, p1, p2, (0, 255, 0), thickness=self.lw, lineType=cv2.LINE_AA)
+                    if label:
+                        tf = max(self.lw - 1, 1)  # font thickness
+                        w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                        outside = p1[1] - h - 3 >= 0  # label fits outside box
+                        p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                        cv2.rectangle(self.im, p1, p2, (0, 255, 0), -1, cv2.LINE_AA)  # filled
+                        cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                    (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                    thickness=tf, lineType=cv2.LINE_AA)
+                # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                #                      db='111-SuShi')
+                # with db.cursor() as cursor:
+                #     sql = 'replace into Sushi_total(`ID` , `Class`, `stay-time`, `Move`, `Expired` )VALUES (%s, %s, %s, %s, %s) ' \
+                #           % (str(nlabel[0]), classes, str(round(elapsed_time, 0)), moves, expired)
+                #     cursor.execute(sql)
+                #     db.commit()
+                # db.close()
 
-                if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
-                    salmon.remove(nlabel[0])
-                elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
-                    shrimp.remove(nlabel[0])
+            elif result >= 0:
 
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                if int(elapsed_time - expiration_time) >= 0:
+                    expired = "'過期'"
+                    moves = "'正常'"
 
-                # if nlabel[0] not in hygiene:
-                #     hygiene.append(nlabel[0])
+                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                                         db='111-SuShi')
+                    with db.cursor() as cursor:
+                        sql = 'delete from Freshness where ID = %s '
+                        id_tuple = (nlabel[0])
+                        cursor.execute(sql, id_tuple)
+                        db.commit()
+                    db.close()
 
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
+                    if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
+                        salmon.remove(nlabel[0])
+                    elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
+                        shrimp.remove(nlabel[0])
+                    elif nlabel[1] == 'capelin' and (nlabel[0] in capelin):
+                        capelin.remove(nlabel[0])
+                    elif nlabel[1] == 'fried' and (nlabel[0] in fried):
+                        fried.remove(nlabel[0])
+                    elif nlabel[1] == 'tuna' and (nlabel[0] in tuna):
+                        tuna.remove(nlabel[0])
+                    elif nlabel[1] == 'tilapia' and (nlabel[0] in tilapia):
+                        tilapia.remove(nlabel[0])
+                    elif nlabel[1] == 'tamagoyaki' and (nlabel[0] in tamagoyaki):
+                        tamagoyaki.remove(nlabel[0])
+                    elif nlabel[1] == 'arctic' and (nlabel[0] in arctic):
+                        arctic.remove(nlabel[0])
+                    elif nlabel[1] == 'crab' and (nlabel[0] in crab):
+                        crab.remove(nlabel[0])
+                    elif nlabel[1] == 'octopus' and (nlabel[0] in octopus):
+                        octopus.remove(nlabel[0])
 
-            elif nlabel[0] in hygiene and nlabel[0] in expired_already:
+                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                                         db='111-SuShi')
+                    with db.cursor() as cursor:
+                        sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
+                              % (classes, str(sushi_quantity))
+                        cursor.execute(sql)
+                        db.commit()
+                    db.close()
 
-                expired = "'過期'"
-                moves = "'被觸碰過'"
+                    with db.cursor() as cursor:
+                        sql = 'delete from Freshness where ID = %s '
+                        id_tuple = (nlabel[0])
+                        cursor.execute(sql, id_tuple)
+                        db.commit()
+                    db.close()
 
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
 
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-            elif nlabel[0] in hygiene:
+                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                    if label:
+                        tf = max(self.lw - 1, 1)  # font thickness
+                        w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                        outside = p1[1] - h - 3 >= 0  # label fits outside box
+                        p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                        cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
+                        cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                    (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                    thickness=tf, lineType=cv2.LINE_AA)
 
-                expired = "'正常'"
-                moves = "'被觸碰過'"
+                elif int(elapsed_time - expiration_time) >= -5:
+                    expired = "'快過期'"
+                    moves = "'正常'"
 
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                                         db='111-SuShi')
+                    with db.cursor() as cursor:
+                        sql = 'replace into Freshness(`ID` , `Class`, `Stay-time`, `Move`, `Expired` )VALUES (%s, %s, %s, %s, %s) ' \
+                            % (str(nlabel[0]), classes, str(round(elapsed_time, 0)), moves, expired)
+                        cursor.execute(sql)
+                        db.commit()
+                    db.close()
 
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-            # elif nlabel[0] in expired_already:
-            elif int(elapsed_time - expiration_time) >= 0:
+                    cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                    if label:
+                        tf = max(self.lw - 1, 1)  # font thickness
+                        w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                        outside = p1[1] - h - 3 >= 0  # label fits outside box
+                        p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                        cv2.rectangle(self.im, p1, p2, (0, 255, 255), -1, cv2.LINE_AA)  # filled
+                        cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                    (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                    thickness=tf, lineType=cv2.LINE_AA)
+                else:
+                    moves = "'正常'"
+                    expired = "'正常'"
 
-                expired = "'過期'"
-                moves = "'正常'"
+                    if nlabel[1] == 'salmon' and (nlabel[0] not in salmon):
+                        salmon.append(nlabel[0])
+                    elif nlabel[1] == 'shrimp' and (nlabel[0] not in shrimp):
+                        shrimp.append(nlabel[0])
+                    elif nlabel[1] == 'capelin' and (nlabel[0] not in capelin):
+                        capelin.append(nlabel[0])
+                    elif nlabel[1] == 'fried' and (nlabel[0] not in fried):
+                        fried.append(nlabel[0])
+                    elif nlabel[1] == 'tuna' and (nlabel[0] not in tuna):
+                        tuna.append(nlabel[0])
+                    elif nlabel[1] == 'tilapia' and (nlabel[0] not in tilapia):
+                        tilapia.append(nlabel[0])
+                    elif nlabel[1] == 'tamagoyaki' and (nlabel[0] not in tamagoyaki):
+                        tamagoyaki.append(nlabel[0])
+                    elif nlabel[1] == 'arctic' and (nlabel[0] not in arctic):
+                        arctic.append(nlabel[0])
+                    elif nlabel[1] == 'crab' and (nlabel[0] not in crab):
+                        crab.append(nlabel[0])
+                    elif nlabel[1] == 'octopus' and (nlabel[0] not in octopus):
+                        octopus.append(nlabel[0])
 
-                cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
+                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                                         db='111-SuShi')
+                    with db.cursor() as cursor:
+                        sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
+                              % (classes, str(sushi_quantity))
+                        cursor.execute(sql)
+                        db.commit()
+                    db.close()
 
-                if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
-                    salmon.remove(nlabel[0])
-                elif nlabel[1] == 'shrimp' and (nlabel[0] in shrimp):
-                    shrimp.remove(nlabel[0])
+                    cv2.rectangle(self.im, p1, p2, (0, 255, 0), thickness=self.lw, lineType=cv2.LINE_AA)
+                    if label:
+                        tf = max(self.lw - 1, 1)  # font thickness
+                        w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
+                        outside = p1[1] - h - 3 >= 0  # label fits outside box
+                        p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
+                        cv2.rectangle(self.im, p1, p2, (0, 255, 0), -1, cv2.LINE_AA)  # filled
+                        cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
+                                    (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
+                                    thickness=tf, lineType=cv2.LINE_AA)
 
-                if nlabel[0] not in expired_already:
-                    expired_already.append(nlabel[0])
+            print("鮭魚:" + str(len(salmon)) + "個")
+            print("鮮蝦:" + str(sushi_quantity) + "個")
 
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 0, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-            # elif nlabel[0] in expired_soon:
-            elif int(elapsed_time - expiration_time) >= -3:
-
-                expired = "'快過期'"
-                moves = "'正常'"
-
-                cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
-
-                if nlabel[0] not in expired_soon:
-                    expired_soon.append(nlabel[0])
-
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 255, 255), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-
-            elif result > 0:
-
-                moves = "'正常'"
-                expired = "'正常'"
-
-                if nlabel[1] == 'salmon' and (nlabel[0] not in salmon):
-                    salmon.append(nlabel[0])
-                elif nlabel[1] == 'shrimp' and (nlabel[0] not in shrimp):
-                    shrimp.append(nlabel[0])
-
-                if label:
-                    tf = max(self.lw - 1, 1)  # font thickness
-                    w, h = cv2.getTextSize(label, 0, fontScale=self.lw / 3, thickness=tf)[0]  # text width, height
-                    outside = p1[1] - h - 3 >= 0  # label fits outside box
-                    p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
-                    cv2.rectangle(self.im, p1, p2, (0, 255, 0), -1, cv2.LINE_AA)  # filled
-                    cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
-                                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
-                                thickness=tf, lineType=cv2.LINE_AA)
-
-            salmon_put = 5 - len(salmon)
-            print("鮭魚應補:" + str(salmon_put) +"個")
-            print("離開軌道:" + str(hygiene))
+            # print("離開軌道:" + str(hygiene))
             print(str(label), expired, moves)
-
-            db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111', db='111-SuShi')
-            with db.cursor() as cursor:
-                sql = 'replace into Freshness(`ID` , `Class`, `Expiration date`, `Move`, `Expired` )VALUES (%s, %s, %s, %s, %s) ' \
-                      % (str(nlabel[0]), classes, str(round(elapsed_time, 0)), moves, expired)
-                # sql = 'replace INTO Freshness(`ID`, `Name`, `Class`, `Expiration date`, `Move`, `Amount`, `Price`, `Chinese_Name`, `Expired` )VALUES (%s, %s, %s, %s, %s, %d, %s, %s, %s) ' \
-                #       % (str(nlabel[0]), repr((nlabel[1])), classes, str(round(elapsed_time, 0)), moves, 0, price, ch_name, expired)
-                cursor.execute(sql)
-                db.commit()
-            # data = cursor.fetchone()
-            # print(data)
-            db.close()
 
     def rectangle(self, xy, fill=None, outline=None, width=1):
         # Add rectangle to image (PIL-only)
