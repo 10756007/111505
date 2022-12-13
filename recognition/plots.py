@@ -472,7 +472,6 @@ class Annotator:
                         db.commit()
                     db.close()
 
-
                     cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
                     if label:
                         tf = max(self.lw - 1, 1)  # font thickness
@@ -552,9 +551,8 @@ class Annotator:
                                     (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                     thickness=tf, lineType=cv2.LINE_AA)
 
-            print("鮭魚:" + str(len(salmon)) + "個")
+            print("鮭魚:" + str(sushi_quantity) + "個")
             print("鮮蝦:" + str(sushi_quantity) + "個")
-
             # print("離開軌道:" + str(hygiene))
             print(str(label), expired, moves)
 
