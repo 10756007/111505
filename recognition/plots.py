@@ -242,10 +242,12 @@ class Annotator:
                 classes = "'A'"
                 expiration_time = 10
                 sushi_quantity = len(salmon)
+                print("鮭魚:" + str(sushi_quantity) + "個")
             elif nlabel[1] == "shrimp": #鮮蝦
                 classes = "'B'"
                 expiration_time = 10
                 sushi_quantity = len(shrimp)
+                print("鮮蝦:" + str(sushi_quantity) + "個")
             elif nlabel[1] == "capelin": #capelin roe蝦味魚卵
                 classes = "'C'"
                 expiration_time = 10
@@ -351,27 +353,27 @@ class Annotator:
                 elif nlabel[1] == 'octopus' and (nlabel[0] in octopus):
                     octopus.remove(nlabel[0])
 
-                db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
-                                     db='111-SuShi')
-                with db.cursor() as cursor:
-                    sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
-                          % (classes, str(sushi_quantity))
-                    cursor.execute(sql)
-                    db.commit()
-                db.close()
+                # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                #                      db='111-SuShi')
+                # with db.cursor() as cursor:
+                #     sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
+                #           % (classes, str(sushi_quantity))
+                #     cursor.execute(sql)
+                #     db.commit()
+                # db.close()
 
                 if int(elapsed_time - expiration_time) >= 0:
                     expired = "'過期'"
                     moves = "'正常'"
 
-                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
-                                         db='111-SuShi')
-                    with db.cursor() as cursor:
-                        sql = 'delete from Freshness where ID = %s '
-                        id_tuple = (nlabel[0])
-                        cursor.execute(sql, id_tuple)
-                        db.commit()
-                    db.close()
+                    # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                    #                      db='111-SuShi')
+                    # with db.cursor() as cursor:
+                    #     sql = 'delete from Freshness where ID = %s '
+                    #     id_tuple = (nlabel[0])
+                    #     cursor.execute(sql, id_tuple)
+                    #     db.commit()
+                    # db.close()
 
                     cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
                     if label:
@@ -411,6 +413,7 @@ class Annotator:
                         cv2.putText(self.im, str(label) + str(round(elapsed_time, 0)),
                                     (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                     thickness=tf, lineType=cv2.LINE_AA)
+
                 # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
                 #                      db='111-SuShi')
                 # with db.cursor() as cursor:
@@ -426,14 +429,14 @@ class Annotator:
                     expired = "'過期'"
                     moves = "'正常'"
 
-                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
-                                         db='111-SuShi')
-                    with db.cursor() as cursor:
-                        sql = 'delete from Freshness where ID = %s '
-                        id_tuple = (nlabel[0])
-                        cursor.execute(sql, id_tuple)
-                        db.commit()
-                    db.close()
+                    # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                    #                      db='111-SuShi')
+                    # with db.cursor() as cursor:
+                    #     sql = 'delete from Freshness where ID = %s '
+                    #     id_tuple = (nlabel[0])
+                    #     cursor.execute(sql, id_tuple)
+                    #     db.commit()
+                    # db.close()
 
                     if nlabel[1] == 'salmon' and (nlabel[0] in salmon):
                         salmon.remove(nlabel[0])
@@ -456,21 +459,15 @@ class Annotator:
                     elif nlabel[1] == 'octopus' and (nlabel[0] in octopus):
                         octopus.remove(nlabel[0])
 
-                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
-                                         db='111-SuShi')
-                    with db.cursor() as cursor:
-                        sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
-                              % (classes, str(sushi_quantity))
-                        cursor.execute(sql)
-                        db.commit()
-                    db.close()
-
-                    with db.cursor() as cursor:
-                        sql = 'delete from Freshness where ID = %s '
-                        id_tuple = (nlabel[0])
-                        cursor.execute(sql, id_tuple)
-                        db.commit()
-                    db.close()
+                    # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                    #                      db='111-SuShi')
+                    # with db.cursor() as cursor:
+                    #     sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
+                    #           % (classes, str(sushi_quantity))
+                    #     sql_1 = 'delete from Freshness where ID = %s '
+                    #     cursor.execute(sql)
+                    #     db.commit()
+                    # db.close()
 
                     cv2.rectangle(self.im, p1, p2, (0, 0, 255), thickness=self.lw, lineType=cv2.LINE_AA)
                     if label:
@@ -487,14 +484,14 @@ class Annotator:
                     expired = "'快過期'"
                     moves = "'正常'"
 
-                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
-                                         db='111-SuShi')
-                    with db.cursor() as cursor:
-                        sql = 'replace into Freshness(`ID` , `Class`, `Stay-time`, `Move`, `Expired` )VALUES (%s, %s, %s, %s, %s) ' \
-                            % (str(nlabel[0]), classes, str(round(elapsed_time, 0)), moves, expired)
-                        cursor.execute(sql)
-                        db.commit()
-                    db.close()
+                    # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                    #                      db='111-SuShi')
+                    # with db.cursor() as cursor:
+                    #     sql = 'replace into Freshness(`ID` , `Class`, `Stay-time`, `Move`, `Expired` )VALUES (%s, %s, %s, %s, %s) ' \
+                    #         % (str(nlabel[0]), classes, str(round(elapsed_time, 0)), moves, expired)
+                    #     cursor.execute(sql)
+                    #     db.commit()
+                    # db.close()
 
                     cv2.rectangle(self.im, p1, p2, (0, 255, 255), thickness=self.lw, lineType=cv2.LINE_AA)
                     if label:
@@ -531,14 +528,14 @@ class Annotator:
                     elif nlabel[1] == 'octopus' and (nlabel[0] not in octopus):
                         octopus.append(nlabel[0])
 
-                    db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
-                                         db='111-SuShi')
-                    with db.cursor() as cursor:
-                        sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
-                              % (classes, str(sushi_quantity))
-                        cursor.execute(sql)
-                        db.commit()
-                    db.close()
+                    # db = pymysql.connect(host='140.131.114.242', port=3306, user='111505', passwd='@Imd505111',
+                    #                      db='111-SuShi')
+                    # with db.cursor() as cursor:
+                    #     sql = 'replace into Sushi_amount(`Class`, `Quantity` )VALUES (%s, %s) ' \
+                    #           % (classes, str(sushi_quantity))
+                    #     cursor.execute(sql)
+                    #     db.commit()
+                    # db.close()
 
                     cv2.rectangle(self.im, p1, p2, (0, 255, 0), thickness=self.lw, lineType=cv2.LINE_AA)
                     if label:
@@ -551,10 +548,9 @@ class Annotator:
                                     (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, self.lw / 3, (0, 0, 0),
                                     thickness=tf, lineType=cv2.LINE_AA)
 
-            print("鮭魚:" + str(sushi_quantity) + "個")
-            print("鮮蝦:" + str(sushi_quantity) + "個")
+
             # print("離開軌道:" + str(hygiene))
-            print(str(label), expired, moves)
+            print(str(label), str(round(elapsed_time, 0)), expired, moves)
 
     def rectangle(self, xy, fill=None, outline=None, width=1):
         # Add rectangle to image (PIL-only)
