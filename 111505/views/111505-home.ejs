@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>享狩獅</title>
+    </head>
+
+    <style>
+
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body{
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url(background.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .logo{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: absolute;
+            bottom: 0;
+        }
+
+        div > img{
+            width: 50px;
+            animation: logo 7s linear infinite;
+        }
+
+        @keyframes logo{
+            0%{
+                transform: translateY(-900px);
+                opacity: 0;
+            }
+            10%{
+                opacity: 0.6;
+            }
+            50%{
+                opacity: 0.8;
+            }
+            75%{
+                opacity: 1;
+            }
+
+            90%{
+                opacity: 0.5;
+            }
+
+            100%{
+                transform: translateY(0px);
+                opacity: 0;
+            }
+        }
+
+        div > img:nth-child(1){
+            animation-delay: 2s;
+        }
+        
+        div > img:nth-child(2){
+            animation-delay: 0s;
+        }
+
+        div > img:nth-child(3){
+            animation-delay: 3s;
+        }
+
+        div > img:nth-child(4){
+            animation-delay: 3.5s;
+        }
+
+        div > img:nth-child(5){
+            animation-delay: 1.5s;
+        }
+
+        div > img:nth-child(6){
+            animation-delay: 0.8s;
+        }
+
+        div > img:nth-child(7){
+            animation-delay: 3.8s;
+        }
+
+        div > img:nth-child(8){
+            animation-delay: 1.3s;
+        }
+
+        .theme{
+            position: absolute;
+            top: 50%;
+            left: 35%;
+            transform: translate(-50%,-50%);
+        }
+
+        h1, h3{
+            font-family: DFKai-sb;
+        }
+
+        div > h3{
+            font-size: 40px;
+            color: rgb(255, 255, 255);
+            text-shadow: 0 0 3px brown, 0 0 10px lightcoral;
+        }
+
+        div > h1{
+            font-size: 100px;
+            color: rgb(255, 255, 255);
+            text-shadow: 0 0 3px brown, 0 0 20px lightcoral;
+        }
+
+        .button1{
+            font-size: 30px;
+            color: rgb(255, 255, 255);
+            padding: 10px 25px;
+            background: transparent;
+            border: 1px solid red;
+            border-radius: 30px;
+            outline: none;
+            cursor: pointer;
+            text-align: right;
+            text-shadow: 0 0 3px rgb(127, 3, 3), 0 0 5px rgb(219, 5, 5);
+            font-family: DFKai-sb;
+        }
+
+        .button1:hover{
+            background-color: lightcoral;
+            border: 1px solid rgb(0, 63, 103);
+            transition: 1.5s;
+            box-shadow: 3px 3px 9px lightcoral;
+        }
+
+    </style>
+
+    <body>
+        
+        <div class="theme">
+            <h3>歡迎來到</h3>
+            <h1>享狩獅</h1>
+            <button class="button1" type="button" onclick=location.href="http://140.131.114.145:8787/login" >進入享狩獅</button>
+        </div>
+
+        <div class="logo">
+            <img src="logo2.PNG">
+            <img src="logo2.png">
+            <img src="logo2.png">
+            <img src="logo2.png">
+            <img src="logo2.png">
+            <img src="logo2.png">
+            <img src="logo2.png">
+            <img src="logo2.png">
+        </div>
+
+    </body>
+</html>
